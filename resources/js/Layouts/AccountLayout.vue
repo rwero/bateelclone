@@ -23,7 +23,7 @@ hey.value = hey.value == '0' ? '418px' : '0'
         </template>
 
         <template #main>
-            <div class="columns grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="columns grid grid-cols-1 md:grid-cols-4 gap-6  my-12 font-sans">
 <div
                     class="rounded-lg bg-white px-4 py-2 text-left text-sm font-medium md:block hidden"
                 >
@@ -254,7 +254,7 @@ hey.value = hey.value == '0' ? '418px' : '0'
                     </div>
                 </div>
 
-                <div class=" rounded-md bg-white  py-4 px-6">
+                <div class=" rounded-md bg-white   p-6 md:col-span-3">
                 <slot  name="content"/>
         </div>
             </div>
