@@ -28,10 +28,9 @@ Route::get('/products', function () {
 })->name('products.index');
 
 Route::get('/products/{id}', function ($id){
+	$product = \App\Models\Product::with('images')->findOrFail($id);
     return Inertia::render('Product', [
-        'id'=>$id,
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register')
+        'product'=>$product
     ]);
 })->name('products.show');
 
