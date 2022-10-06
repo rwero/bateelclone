@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
-import { ref } from "vue";
+import { ref,onMounted } from "vue";
 defineProps({
 	products: Object,
 });
@@ -9,6 +9,8 @@ const breadcrumbs = ref([
 	{ id: 1, name: "Home", href: "#" },
 	{ id: 2, name: "All Products", href: "#" },
 ]);
+
+
 
 </script>
 
@@ -46,9 +48,9 @@ const breadcrumbs = ref([
 							All Products
 						</h2>
 						<div class="">
-							<div class="mx-auto max-w-2xl py-8 pt-0  px-6 lg:max-w-7xl lg:px-8">
+							<div class="mx-auto max-w-2xl py-8 pt-0  px-6 lg:max-w-7xl lg:px-8" >
 								<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-4">
-									<div v-for="product in products" :key="product.id" class="relative">
+									<div v-for="product in $page.props.products" :key="product.id" class="relative">
 										<div
 											class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 hover:opacity-75 cursor-pointer">
 											<a :href="route('products.show',product.id)" class="block">
@@ -56,7 +58,7 @@ const breadcrumbs = ref([
 												class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
 </a>
 										</div>
-										<div class="mt-4 sm:flex justify-between block text-center  sm:px-2">
+										<div class="mt-4 sm:flex justify-between block text-center sm:text-left  sm:px-1 ">
 											<div>
 												<h3 class="text-xl sm:text-md text-gray-700 ">
 													<a :href="
@@ -69,12 +71,12 @@ const breadcrumbs = ref([
 														{{ product.title }}
 													</a>
 												</h3>
-												<button class="mt-1 border border-gray-500 py-2 w-1/2 sm:w-full text-md text-gray-500 hover:text-gray-700">
-													Add to cart
-												</button>
+												<span class="text-[11px] text-gray-600">From </span><span class="text-xl font-medium text-gray-900">{{ product.price }}</span>
 											</div>
 											<div class=" flex justify-center items-baseline gap-2" >
-												<span class="text-[11px] text-gray-600">From </span><span class="text-xl font-medium text-gray-900">{{ product.price }}</span>
+												<button class="mt-1 border border-gray-500 py-2 w-1/2 sm:w-28 text-md text-gray-500 hover:text-gray-700">
+													Add to cart
+												</button>
 											</div>
 										</div>
 									</div>
