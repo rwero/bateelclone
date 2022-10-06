@@ -220,13 +220,13 @@
       "_XMarkIcon.a64652dc.js"
     ]
   },
-  "resources/js/Pages/Home.css": {
-    "file": "assets/Home.1e65c5a3.css",
-    "src": "resources/js/Pages/Home.css"
-  },
   "AccountLayout.css": {
     "file": "assets/AccountLayout.c183854a.css",
     "src": "AccountLayout.css"
+  },
+  "resources/js/Pages/Home.css": {
+    "file": "assets/Home.1e65c5a3.css",
+    "src": "resources/js/Pages/Home.css"
   },
   "AuthenticatedLayout.css": {
     "file": "assets/AuthenticatedLayout.b44c67c1.css",
