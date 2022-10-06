@@ -2,84 +2,14 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
+defineProps({
+	products : Object,
+});
 const breadcrumbs = ref([
     { id: 1, name: "Home", href: "#" },
     { id: 2, name: "All Products", href: "#" },
 ]);
-const products = ref([
-    {
-        id: 1,
-        name: "Palm Chest Drawer",
-        href: "#",
-        imageSrc:
-            "https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/p/a/palm_collection_-_drawer_creative.jpg",
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
-        color: "Black",
-    },
 
-    {
-        id: 2,
-        name: "Classic Date Spread",
-        href: "#",
-        imageSrc:
-            "https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/1/_/1._classic_-_date_spreads_850_x_850.jpg",
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
-        color: "Black",
-    },
-    {
-        id: 3,
-        name: "Raspberry Date Spread",
-        href: "#",
-        imageSrc:
-            "https://bateel.com/media/catalog/product/cache/7b87012fab0eaa0484d820bd62ac7576/k/h/khidri_ginger_2.jpg",
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
-        color: "Black",
-    },
-    {
-        id: 4,
-        name: "Praline Date Spread",
-        href: "#",
-        imageSrc:
-            "https://bateel.com/media/catalog/product/cache/7b87012fab0eaa0484d820bd62ac7576/0/0/00_cassandra_family_1.jpg",
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
-        color: "Black",
-    },
-    {
-        id: 4,
-        name: "Praline Date Spread",
-        href: "#",
-        imageSrc:
-            "https://bateel.com/media/catalog/product/cache/7b87012fab0eaa0484d820bd62ac7576/c/a/caramelised_macadamia_1.jpg",
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
-        color: "Black",
-    },
-    {
-        id: 5,
-        name: "Segai Dates",
-        href: "#",
-        imageSrc:
-            "https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/0/1/01_sgai_lf.jpg",
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
-        color: "Black",
-    },
-    {
-        id: 6,
-        name: "Ajwa Dates",
-        href: "#",
-        imageSrc:
-            "https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/0/1/01_ajwa_lf.jpg",
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
-        color: "Black",
-    },
-    // More products...
-]);
 </script>
 
 <template>
@@ -127,6 +57,7 @@ const products = ref([
             </nav>
         </template>
         <template #main>
+{{products[30].images[0]}}
             <div class="py-2">
                 <div class="max-w-7xl mx-auto px-6" >
                     <div
@@ -153,7 +84,7 @@ const products = ref([
                                             class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 hover:opacity-75 cursor-pointer"
                                         >
                                             <img
-                                                :src="product.imageSrc"
+                                                :src="hhh"
                                                 :alt="product.imageAlt"
                                                 class="h-full w-full object-cover object-center lg:h-full lg:w-full"
                                             />
