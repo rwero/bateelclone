@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 		$this->call(\Database\Seeders\OrderState::class);
 		$this->call(\Database\Seeders\ProductsTableSeeder::class);
+		$this->call(\Database\Seeders\ImagesSeeder::class);
 		\App\Models\Product::factory(200)->hasImages(3)->create();
     }
 }
