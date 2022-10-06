@@ -39,10 +39,7 @@ const breadcrumbs = ref([
 			</nav>
 		</template>
 		<template #main>
-			<p v-if="$page.props.products">
-
-{{ $page.props.products[0]}}
-			</p>
+			
 			<div class="py-2">
 				<div class="max-w-7xl mx-auto ">
 					<div class="overflow-hidden shadow-sm md:rounded-lg">

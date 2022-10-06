@@ -24,7 +24,6 @@ Route::get('/', function () {
 
 Route::get('/products', function () {
 	$products = \App\Models\Product::with("images")->get();
-	echo("$products[0]");
     return Inertia::render('AllProducts', ['products' => $products]);
 })->name('products.index');
 
