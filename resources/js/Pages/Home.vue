@@ -106,7 +106,7 @@ const images = ref([
 							src="https://bateel.com/media/wysiwyg/boutiquePage/Farm-image-for-web.jpg" class="object-contain object-center mx-auto  relative img-shadow z-0
 							" alt="" srcset="" />
 					</div>
-					<div class="bg-white shadow md:pt-14 pt-8  md:mt-0 -mt-14 border border-gray-100 md:px-10 px-6 md:w-[500px] md:mx-0 mx-auto w-[440px] z-10 relative
+					<div class="bg-white shadow md:pt-14 pt-8  md:mt-0 -mt-14 border border-gray-100 md:px-10 px-6 md:w-[500px] md:max-w-[500px] md:mx-0 mx-auto w-[90%] max-w-[440px] z-10 relative
 					">
 						<h2 class="font-medium text-2xl">Bateel Organic Date Groves</h2>
 						<p class="text-gray-600 mt-4 text-sm font-sans">Bateel date groves have a rich heritage dating

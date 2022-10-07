@@ -1,5 +1,5 @@
 <template>
-<div class="md:h-[590px]  mx-6 md:mx-auto">
+<div class="  mx-6 md:mx-auto">
 				<h2 class="font-semibold text-3xl mt-4 mb-8">{{$props.title}}</h2>
 
 				<div class="w-full overflow-scroll snap-x snap-mandatory">
