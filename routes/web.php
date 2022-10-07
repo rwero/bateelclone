@@ -16,9 +16,11 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+	$some_products = \App\Models\Product::with('images')->where('id' ,'<' ,'10')->get();
     return Inertia::render('Home', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register')
+        'canRegister' => Route::has('register'),
+		'products' => $some_products
     ]);
 })->name("home.index");
 

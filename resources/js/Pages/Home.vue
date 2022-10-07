@@ -1,12 +1,24 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
+import { ref } from 'vue';
+import ProductHScroll from '@/Components/ProductHScroll.vue';
 
 defineProps({
 	canLogin: Boolean,
 	canRegister: Boolean,
+	products : Array,
 
-})
+
+});
+const images = ref([
+
+	"https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/main.jpg",
+	"https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/small-l.jpg",
+	"https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/small-r.jpg",
+	"https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/wide.jpg"
+]);
 
 </script>
 
@@ -17,7 +29,7 @@ defineProps({
 
 
 		<template #main>
-			<div class=" mx-auto mb-20 w-[100vw] absolute  overflow-hidden inset-x-0">
+			<div class=" mx-auto mb-20 w-[100vw] absolute top-20 overflow-hidden inset-x-0 ">
 				<div class=" md:h-[590px] sm:h-[360px] h-[250px] relative">
 
 					<img src="https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/wide.jpg"
@@ -25,10 +37,12 @@ defineProps({
 					<div
 						class="absolute  inset-0 md:w-4/5  w-[90%] mx-auto text-center  text-white flex items-center justify-center flex-col gap-6 ">
 						<h2 class="font-bold md:text-4xl text-2xl text-shadow ">Discover the Difference</h2>
-						<span class="md:text-xl  text-md text-shadow  ">Cultivators of the world’s only gourmet dates packaged in
+						<span class="md:text-xl  text-md text-shadow  ">Cultivators of the world’s only gourmet dates
+							packaged in
 							luxury
 							hand-painted wooden gift boxes</span>
-						<a :href="route('products.index')" class="py-3 px-10 mt-2 uppercase bg-white rounded-lg text-black">
+						<a :href="route('products.index')"
+							class="py-3 px-10 mt-2 uppercase bg-white rounded-lg text-black">
 							<span>Shop now</span>
 						</a>
 					</div>
@@ -37,7 +51,8 @@ defineProps({
 
 			</div>
 
-			<div class=" mx-auto mb-20 md:mt-[680px] sm:mt-[450px] mt-[340px] flex justify-center items-center">
+			<div
+				class="hidden sm:mx-auto mx-4  mb-20 md:mt-[680px] sm:mt-[450px] mt-[340px] md:flex justify-center items-center">
 				<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 					<div>
 						<img src="https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/main.jpg"
@@ -66,111 +81,45 @@ defineProps({
 
 			</div>
 
-			<div class="my-20 mx-auto">
-				<h2 class="font-semibold text-3xl mt-4 mb-8">Premium Organic Dates</h2>
-				<div class="grid md:grid-cols-3 gap-6 items-center grid-cols-1">
-					<div>
-						<div>
-							<img src="https://bateel.com/media/catalog/product/cache/ca15cb01acc6da5b48940382a5be6024/0/1/01_majdool_lf.jpg"
-								class="object-contain w-full object-center" alt="" srcset="">
-						</div>
-						<div class="mt-2">
-							<h3 class="text-center font-medium">Medjool Dates</h3>
-							<p class="text-center font-bold mt-1">$54.00 <span class="text-gray-500 text-sm">per
-									Kg</span></p>
-						</div>
-					</div>
-					<div>
-						<div>
-							<img src="https://bateel.com/media/catalog/product/cache/ca15cb01acc6da5b48940382a5be6024/k/h/khidri_pistachio_2.jpg"
-								class="object-contain w-full object-center" alt="" srcset="">
-						</div>
-						<div class="mt-2">
-							<h3 class="text-center font-medium">Khidri Dates with Pistachio</h3>
-							<p class="text-center font-bold mt-1">$54.00 <span class="text-gray-500 text-sm">per
-									Kg</span></p>
-						</div>
-					</div>
-					<div>
-						<div>
-							<img src="https://bateel.com/media/catalog/product/cache/ca15cb01acc6da5b48940382a5be6024/0/1/01_ajwa_lf.jpg"
-								class="object-contain w-full object-center" alt="" srcset="">
-						</div>
-						<div class="mt-2">
-							<h3 class="text-center font-medium">Ajwa Dates</h3>
-							<p class="text-center font-bold mt-1">$54.00 <span class="text-gray-500 text-sm">per
-									Kg</span></p>
-						</div>
-					</div>
-
-
-
-
-				</div>
-
+			<div
+				class="block sm:mx-auto mx-6  mb-20 md:mt-[680px] sm:mt-[450px] mt-[340px] md:hidden justify-center items-center">
+				<TabGroup>
+					<TabPanels class="mt-2">
+						<TabPanel v-for="(image, i) in images" :key="i">
+							<img :src="image" alt="" class="w-full h-96 object-cover object-center" />
+						</TabPanel>
+					</TabPanels>
+					<TabList class="flex justify-center items-start gap-4 mt-6 mx-1 ">
+						<Tab v-for="(image, i) in images" as="template" :key="i">
+							<div class="border border-gray-500 rounded-full w-5 h-5 "></div>
+						</Tab>
+					</TabList>
+				</TabGroup>
 			</div>
 
-			<div class="  my-20 mx-auto ">
+	<ProductHScroll  title="Premium Organic Dates" />
 
-				<div class="flex items-center justify-center ">
-					<div class=" mr-[-5rem]"><img
-							src="https://bateel.com/media/wysiwyg/boutiquePage/Farm-image-for-web.jpg" class="object-contain object-center mx-auto  relative img-shadow
+			<div class= " my-20 md:mx-auto mx-6 ">
+
+				<div class="md:flex items-center justify-center block center relative">
+					<div class=" md:mr-[-5rem] z-0 relative"><img
+							src="https://bateel.com/media/wysiwyg/boutiquePage/Farm-image-for-web.jpg" class="object-contain object-center mx-auto  relative img-shadow z-0
 							" alt="" srcset="" />
 					</div>
-					<div class="bg-white shadow pt-14  border border-gray-100 px-10 w-[500px] z-10">
+					<div class="bg-white shadow md:pt-14 pt-8  md:mt-0 -mt-14 border border-gray-100 md:px-10 px-6 md:w-[500px] md:mx-0 mx-auto w-[440px] z-10 relative
+					">
 						<h2 class="font-medium text-2xl">Bateel Organic Date Groves</h2>
 						<p class="text-gray-600 mt-4 text-sm font-sans">Bateel date groves have a rich heritage dating
 							back nearly 100 years when the first date palms were planted in 1932. </p>
-						<div class="text-center mt-6 mb-8"><button
+						<div class="text-center mt-6 md:mb-8 mb-4"><button
 								class="bg-white rounded-md text-sm mx-auto px-6 py-2  border-gray-800 border ">Discover</button>
 						</div>
 					</div>
 				</div>
 
 			</div>
-			<div class="md:h-[590px]  mx-auto">
-				<h2 class="font-semibold text-3xl mt-4 mb-8">Gourmet Products</h2>
-				<div class="grid md:grid-cols-3 gap-6 items-center grid-cols-1">
-					<div>
-						<div>
-							<img src="https://bateel.com/media/catalog/product/cache/ca15cb01acc6da5b48940382a5be6024/0/1/01_majdool_lf.jpg"
-								class="object-contain w-full object-center" alt="" srcset="">
-						</div>
-						<div class="mt-2">
-							<h3 class="text-center font-medium">Medjool Dates</h3>
-							<p class="text-center font-bold mt-1">$54.00 <span class="text-gray-500 text-sm">per
-									Kg</span></p>
-						</div>
-					</div>
-					<div>
-						<div>
-							<img src="https://bateel.com/media/catalog/product/cache/ca15cb01acc6da5b48940382a5be6024/k/h/khidri_pistachio_2.jpg"
-								class="object-contain w-full object-center" alt="" srcset="">
-						</div>
-						<div class="mt-2">
-							<h3 class="text-center font-medium">Khidri Dates with Pistachio</h3>
-							<p class="text-center font-bold mt-1">$54.00 <span class="text-gray-500 text-sm">per
-									Kg</span></p>
-						</div>
-					</div>
-					<div>
-						<div>
-							<img src="https://bateel.com/media/catalog/product/cache/ca15cb01acc6da5b48940382a5be6024/0/1/01_ajwa_lf.jpg"
-								class="object-contain w-full object-center" alt="" srcset="">
-						</div>
-						<div class="mt-2">
-							<h3 class="text-center font-medium">Ajwa Dates</h3>
-							<p class="text-center font-bold mt-1">$54.00 <span class="text-gray-500 text-sm">per
-									Kg</span></p>
-						</div>
-					</div>
-
-
-
-
-				</div>
-
-			</div>
+			
+	<ProductHScroll  title="Gourmet Products" />
 
 
 		</template>

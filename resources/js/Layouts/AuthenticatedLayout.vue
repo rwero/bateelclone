@@ -161,7 +161,7 @@ const searchTerm = ref("");
 							<div class="px-4 font-medium text-sm text-gray-500">
 								{{ $page.props.auth.user.email }}
 							</div>
-							<ResponsiveNavLink :href="route('products.index')"
+							<ResponsiveNavLink :href="route('account.show')"
 								:active="route().current('contact.index')">
 								{{ $page.props.auth.user.first_name }}
 							</ResponsiveNavLink>
