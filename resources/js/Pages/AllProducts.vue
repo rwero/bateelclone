@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
-import { ref,onMounted } from "vue";
+import { ref,onMounted,onUnmounted } from "vue";
 
 
 
@@ -45,6 +45,9 @@ if(el.getBoundingClientRect().bottom <1200){
 }
 	});
   }) ;
+  onUnmounted(()=>{
+	window.removeEventListener('click');
+  });
 
 
 const breadcrumbs = ref([
