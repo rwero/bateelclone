@@ -2,9 +2,51 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref,onMounted } from "vue";
-defineProps({
-	products: Object,
-});
+
+
+
+/* 		if(el.getBoundingClientRect().bottom < window.pageYOffset + window.screen.availHeight  ){
+			console.log("WSSELnA");
+		} */
+
+
+
+let products = ref();
+let last_id = ref(0);
+let get_data = false
+
+async function loadMore(){
+	if (!get_data) {return ;}
+	get_data =false;
+
+	const res = await fetch( `/api/products?id=${last_id.value}`);
+					const data = await res.json();
+
+	products.value = [...products.value,...data];
+	get_data = true; 
+}
+  onMounted (async ()=>{
+
+	 const res = await fetch( `/api/products?id=${last_id}`);
+					const data = await res.json();
+
+	console.log("the data : ",data);
+	products.value = data;
+	console.log("products: ",products.value);
+	last_id.value = products.value[products.value.length -1].id;
+	get_data = true; 
+
+    window.addEventListener('scroll', async ()=>{
+const el = document.getElementById("scroll");
+if(el.getBoundingClientRect().bottom <1200){
+
+	await loadMore();
+
+}
+	});
+  }) ;
+
+
 const breadcrumbs = ref([
 	{ id: 1, name: "Home", href: "#" },
 	{ id: 2, name: "All Products", href: "#" },
@@ -39,20 +81,23 @@ const breadcrumbs = ref([
 			</nav>
 		</template>
 		<template #main>
+
+
 			
 			<div class="py-2">
 				<div class="max-w-7xl mx-auto ">
-					<div class="overflow-hidden shadow-sm md:rounded-lg">
+					<div class="overflow-hidden ">
 						<h2
 							class="font-medium text-4xl text-gray-800 leading-tight p-6 lg:p-8 text-center lg:text-left">
 							All Products
 						</h2>
 						<div class="">
-							<div class="mx-auto max-w-2xl py-8 pt-0  px-6 lg:max-w-7xl lg:px-8" >
-								<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-4">
-									<div v-for="product in $page.props.products" :key="product.id" class="relative">
+							<div id="scroll" class="mx-auto max-w-2xl py-8 pt-0  px-6 lg:max-w-7xl lg:px-8" >
+								<div  class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-4" v-if="last_id">
+									<div v-for="product in products" :key="product.id" class="relative">
 										<div
 											class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 hover:opacity-75 cursor-pointer">
+
 											<a :href="route('products.show',product.id)" class="block">
 											<img :src="product.images[0].path" :alt="product.imageAlt"
 												class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
@@ -86,6 +131,36 @@ const breadcrumbs = ref([
 					</div>
 				</div>
 			</div>
+<div class="px-4 py-12" v-if="!get_data" >
+    
+  <div class="flex justify-center items-center">
+    <div class="spinner-border animate-spin inline-block w-10 h-10 border-gray-700 rounded-full" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+        </div>
+  
 		</template>
 	</AuthenticatedLayout>
 </template>
+<style>
+.spinner-border{
+	border:.25em solid rgb(55,65,81);
+border-right-color: transparent;
+}
+.animate-spin{
+animation: spin 1s linear infinite;
+}
+.visually-hidden{
+position: absolute !important;
+width: 1px !important;
+height: 1px !important;
+padding: 0 !important;
+margin: -1px !important;
+overflow: hidden !important;
+clip: rect(0,0,0,0) !important;
+white-space: nowrap !important;
+border: 0 !important;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>

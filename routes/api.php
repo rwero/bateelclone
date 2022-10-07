@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/products', function (){
+	$products = \App\Models\Product::with("images")->where('id','>',request()->id)->limit(15)->get();
+
+	return response()->json($data = $products);
+});
