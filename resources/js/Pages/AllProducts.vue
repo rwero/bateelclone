@@ -131,7 +131,7 @@ const breadcrumbs = ref([
 					</div>
 				</div>
 			</div>
-<div class="px-4 py-12" v-if="!get_data" >
+<div class="px-4 py-12" :class="get_data? 'hidden':''" >
     
   <div class="flex justify-center items-center">
     <div class="spinner-border animate-spin inline-block w-10 h-10 border-gray-700 rounded-full" role="status">
