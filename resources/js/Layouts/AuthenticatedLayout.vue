@@ -199,7 +199,7 @@ const searchTerm = ref("");
 			</header>
 
 			<!-- Page Content -->
-			<main class="max-w-7xl mx-auto sm:py-4 sm:px-4 font-serif">
+			<main class=" sm:py-4 font-serif">
 				<slot name="main" />
 			</main>
 

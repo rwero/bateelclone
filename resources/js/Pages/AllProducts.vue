@@ -19,7 +19,7 @@ async function loadMore(){
 	if (!get_data) {return ;}
 	get_data =false;
 
-	const res = await fetch( `/api/products?id=${last_id.value}`);
+	const res = await fetch( `https://bateelclone.reepoo.site/index.php/api/products?id=${last_id.value}`);
 					const data = await res.json();
 
 	products.value = [...products.value,...data];
@@ -27,7 +27,7 @@ async function loadMore(){
 }
   onMounted (async ()=>{
 
-	 const res = await fetch( `/api/products?id=${last_id}`);
+	 const res = await fetch( `https://bateelclone.reepoo.site/index.php/api/products?id=${last_id}`);
 					const data = await res.json();
 
 	console.log("the data : ",data);

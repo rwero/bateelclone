@@ -29,7 +29,7 @@ const images = ref([
 
 
 		<template #main>
-			<div class=" mx-auto mb-20 w-[100vw] absolute top-20 overflow-hidden inset-x-0 ">
+			<div class=" mx-auto  mt-6 mb-20 w-[100vw]   overflow-hidden">
 				<div class=" md:h-[590px] sm:h-[360px] h-[250px] relative">
 
 					<img src="https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/wide.jpg"
@@ -50,9 +50,11 @@ const images = ref([
 
 
 			</div>
+			<div class="max-w-7xl mx-auto"> 
+
 
 			<div
-				class="hidden sm:mx-auto mx-4  mb-20 md:mt-[680px] sm:mt-[450px] mt-[340px] md:flex justify-center items-center">
+				class="hidden sm:mx-auto mx-4  mb-20  md:flex justify-center items-center">
 				<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 					<div>
 						<img src="https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/main.jpg"
@@ -82,7 +84,7 @@ const images = ref([
 			</div>
 
 			<div
-				class="block sm:mx-auto mx-6  mb-20 md:mt-[680px] sm:mt-[450px] mt-[340px] md:hidden justify-center items-center">
+				class="block sm:mx-auto mx-6  mb-20  md:hidden justify-center items-center">
 				<TabGroup>
 					<TabPanels class="mt-2">
 						<TabPanel v-for="(image, i) in images" :key="i">
@@ -122,6 +124,7 @@ const images = ref([
 	<ProductHScroll  title="Gourmet Products" />
 
 
+			</div>
 		</template>
 
 	</AuthenticatedLayout>
