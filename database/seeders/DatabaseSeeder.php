@@ -16,10 +16,11 @@ class DatabaseSeeder extends Seeder
     {
         \App\Models\User::factory(50)->hasOrders(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+         \App\Models\User::factory()->hasOrders(3)->create([
+             'first_name' => 'Redouane',
+             'last_name' => 'Moussaui',
+             'email' => 'red@email.com',
+         ]);
 		$this->call(\Database\Seeders\OrderState::class);
 		$this->call(\Database\Seeders\ProductsTableSeeder::class);
 		$this->call(\Database\Seeders\ImagesSeeder::class);

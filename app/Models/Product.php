@@ -19,4 +19,5 @@ class Product extends Model
    public function images(){
 	return $this->hasMany(\App\Models\Image::class);
    }
+ protected $casts = ['price' => 'float'];
 }

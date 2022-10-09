@@ -1,123 +1,172 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-   
-  <TransitionRoot as="template" :show="open">
-    <Dialog as="div" class="relative z-10" @close="$emit('close')">
-      <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-      </TransitionChild>
 
-      <div class="fixed inset-0 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden">
-          <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-            <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
-              <DialogPanel class="pointer-events-auto w-screen max-w-md">
-                <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                  <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
-                    <div class="flex items-start justify-between">
-                      <DialogTitle class="text-lg font-medium text-gray-900">Shopping cart</DialogTitle>
-                      <div class="ml-3 flex h-7 items-center">
-                        <button type="button" class="-m-2 p-2 text-gray-400 hover:text-gray-500" @click="$emit('close')">
-                          <span class="sr-only">Close panel</span>
-                          <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-                        </button>
-                      </div>
-                    </div>
+	<TransitionRoot as="template" :show="open">
+		<Dialog as="div" class="relative z-10" @close="$emit('close')">
+			<TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0"
+				enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
+				<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+			</TransitionChild>
 
-                    <div class="mt-8">
-                      <div class="flow-root">
-                        <ul role="list" class="-my-6 divide-y divide-gray-200">
-                          <li v-for="product in products" :key="product.id" class="flex py-6">
-                            <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                              <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center" />
-                            </div>
+			<div class="fixed inset-0 overflow-hidden">
+				<div class="absolute inset-0 overflow-hidden">
+					<div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+						<TransitionChild as="template"
+							enter="transform transition ease-in-out duration-500 sm:duration-700"
+							enter-from="translate-x-full" enter-to="translate-x-0"
+							leave="transform transition ease-in-out duration-500 sm:duration-700"
+							leave-from="translate-x-0" leave-to="translate-x-full">
+							<DialogPanel class="pointer-events-auto w-screen max-w-md">
+								<div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+									<div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
+										<div class="flex items-start justify-between">
+											<DialogTitle class="text-lg font-medium text-gray-900">Shopping cart
+											</DialogTitle>
+											<div class="ml-3 flex h-7 items-center">
+												<button type="button" class="-m-2 p-2 text-gray-400 hover:text-gray-500"
+													@click="$emit('close')">
+													<span class="sr-only">Close panel</span>
+													<XMarkIcon class="h-6 w-6" aria-hidden="true" />
+												</button>
+											</div>
+										</div>
 
-                            <div class="ml-4 flex flex-1 flex-col">
-                              <div>
-                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                  <h3>
-                                    <a :href="product.href">{{ product.name }}</a>
-                                  </h3>
-                                  <p class="ml-4">{{ product.price }}</p>
-                                </div>
-                                <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
-                              </div>
-                              <div class="flex flex-1 items-end justify-between text-sm">
-                                <p class="text-gray-500">Qty {{ product.quantity }}</p>
+										<div class="mt-8">
+											<div class="flow-root">
+												<div v-if="$page.props.cartProducts.length ==0"
+													class="text-gray-500 text-center mt-12">
+													No items</div>
+												<ul role="list" v-else class="-my-6 divide-y divide-gray-200">
+													<li v-for="product in $page.props.cartProducts" :key="product.id"
+														class="flex py-6">
+														<div
+															class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+															<img :src="product.image.path" :alt="product.imageAlt"
+																class="h-full w-full object-cover object-center" />
+														</div>
 
-                                <div class="flex">
-                                  <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+														<div class="ml-4 flex flex-1 flex-col">
+															<div>
+																<div
+																	class="flex justify-between text-base font-medium text-gray-900">
+																	<h3>
+																		<a :href="route('products.show',product.product_id)">{{
+																		product.title }}</a>
+																	</h3>
+																	<p class="ml-4">{{ product.price }}</p>
+																</div>
+																<!--                                 <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p> -->
+															</div>
+															<div class="flex flex-1 items-end justify-between text-sm">
+																<p class="text-gray-500">Qty {{product.quantity}}</p>
 
-                  <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
-                    <div class="flex justify-between text-base font-medium text-gray-900">
-                      <p>Subtotal</p>
-                      <p>$262.00</p>
-                    </div>
-                    <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                    <div class="mt-6">
-                      <a :href="route('checkout.show')" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
-                    </div>
-                    <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
-                      <p>
-                        or
-                        <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="$emit('close')">
-                          Continue Shopping
-                          <span aria-hidden="true"> &rarr;</span>
-                        </button>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
-        </div>
-      </div>
-    </Dialog>
-  </TransitionRoot>
+																<div class="flex">
+																	<button type="button"
+																		class="font-medium text-indigo-600 hover:text-indigo-500"
+																		@click="handleRemove(product.product_id)">Remove</button>
+																</div>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+
+									<div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+										<div class="flex justify-between text-base font-medium text-gray-900">
+											<p>Subtotal</p>
+											<p>${{subtotal}}</p>
+										</div>
+										<p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at
+											checkout.</p>
+										<div class="mt-6">
+											<a :href="route('checkout.show')" :disabled="subtotal"
+												class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+										</div>
+										<div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+											<p>
+												or
+												<button type="button"
+													class="font-medium text-indigo-600 hover:text-indigo-500"
+													@click="$emit('close')">
+													Continue Shopping
+													<span aria-hidden="true"> &rarr;</span>
+												</button>
+											</p>
+										</div>
+									</div>
+								</div>
+							</DialogPanel>
+						</TransitionChild>
+					</div>
+				</div>
+			</div>
+		</Dialog>
+	</TransitionRoot>
 </template>
 
 <script setup>
 
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
-
+import { XMarkIcon } from '@heroicons/vue/24/outline';
+import { ref, onMounted, computed } from 'vue';
+import { usePage } from '@inertiajs/inertia-vue3'
+import axios from 'axios';
+usePage().props.value.cartProducts = [];
 defineProps(['open']);
 defineEmits(['close']);
 
+let subtotal = computed(() => {
+	let res = 0;
+	for (let prod of  usePage().props.value.cartProducts){
+		res += prod.price * prod.quantity;
+	}
 
-const products = [
-  {
-    id: 1,
-    name: 'Segai Dates',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
-    quantity: 1,
-    imageSrc: 'https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/0/1/01_sgai_lf.jpg',
-    imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Ajwa Dates',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc: 'https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/0/1/01_ajwa_lf.jpg',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-  // More products...
-]
-  
+	return res
+});
+onMounted(async () => {
+		console.log("logged in  as : ", usePage().props.value.auth.user);
+	if (usePage().props.value.auth.user) {
+
+		const res = await fetch("/cart");
+		const data = await res.json();
+
+		if (data.success) {
+			usePage().props.value.cartProducts = data.products;
+		} else {
+			alert("Error");
+		}
+	} else {
+		const cartItems = localStorage.getItem("cart") || [];
+		if (cartItems.length != 0) {
+
+			usePage().props.value.cartProducts = JSON.parse(cartItems);
+		} else {
+			usePage().props.value.cartProducts = [];
+
+		}
+	}
+
+})
+
+async function handleRemove(id) {
+	console.log("removing : ", id);
+	usePage().props.value.cartProducts = usePage().props.value.cartProducts.filter(el => el.product_id != id);
+	if (usePage().props.value.auth.user) {
+const res = await axios.delete(`/cart/${id}`);
+
+		if (res.status == 200) {
+	usePage().props.value.cartProducts = usePage().props.value.cartProducts.filter(el => el.product_id != id);
+			alert("Success");
+		} else {
+			alert("Error");
+		}
+	} else {
+
+		localStorage.setItem("cart", JSON.stringify(usePage().props.value.cartProducts));
+	usePage().props.value.cartProducts = usePage().props.value.cartProducts.filter(el => el.product_id != id);
+	}
+}
 
 </script>

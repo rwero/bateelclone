@@ -4,6 +4,9 @@ import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from "@headlessui/vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
+import axios from 'axios';
+import { usePage } from '@inertiajs/inertia-vue3'
+
 import {
 	StarIcon,
 	PlusIcon,
@@ -11,6 +14,7 @@ import {
 	MinusIcon,
 	MinusSmallIcon,
 } from "@heroicons/vue/20/solid";
+console.log("the user is : ", usePage().props.value);
 
 const qte = ref(1);
 const reviews = ref([
@@ -34,9 +38,39 @@ const reviews = ref([
 
 
 const open = ref(false);
-defineProps({
+const props = defineProps({
 	product: Object,
 });
+console.log("THE PRODUCT : ", props.product);
+async function addToCart(auth){
+	console.log("adding ",props.product.title, " to cart" );
+	
+	console.log("the verf ",usePage().props.value.cartProducts.filter(el => el.product_id == props.product.id));
+	if(usePage().props.value.cartProducts.filter(el => el.product_id == props.product.id).length > 0){
+		alert("already in cart");
+		return;
+	}
+		usePage().props.value.cartProducts.push({product_id:props.product.id, quantity : Number(qte.value),price:props.product.price, image: props.product.images[0],title : props.product.title});
+	if(!usePage().props.value.auth.user){
+		console.log("not logged in");
+localStorage.setItem("cart", JSON.stringify(usePage().props.value.cartProducts));
+		alert("added successfully");
+	}else{
+
+		const res = await axios.post("/cart",{product_id:props.product.id, quantity : Number(qte.value)});
+/* 	const res = await fetch('/cart',{
+			method: 'POST',
+			
+			body: JSON.stringify({product_id:props.product.id, quantity : Number(qte.value)}),
+		}); */
+		alert(res.status);
+/* 	if(data.success){
+		alert("added successfully");
+	}else{
+		alert("An error happened")
+	} */
+	}
+}
 </script>
 
 <template>
@@ -164,7 +198,7 @@ defineProps({
 
 
 
-									<form>
+									
 										<div class="mt-2">
 											<h2>Kilograms</h2>
 											<div class="mt-4  ">
@@ -190,11 +224,11 @@ defineProps({
 											</div>
 										</div>
 
-										<button type="submit"
+										<button  @click="addToCart($page.props.auth)"
 											class="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
 											Add to cart
 										</button>
-									</form>
+									
 									<!-- delivery -->
 									<h2 class="font-bold text-lg mt-10">
 										Delivery Details
