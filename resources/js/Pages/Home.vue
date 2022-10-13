@@ -12,6 +12,8 @@ defineProps({
 
 
 });
+
+console.log("the current url is : ", window.location.href.toString().split("/"));
 const images = ref([
 
 	"https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/main.jpg",

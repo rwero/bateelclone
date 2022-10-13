@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref,onMounted,onUnmounted } from "vue";
 
-
+import {addToCart} from '../functions';
 
 /* 		if(el.getBoundingClientRect().bottom < window.pageYOffset + window.screen.availHeight  ){
 			console.log("WSSELnA");
@@ -46,7 +46,7 @@ if(el.getBoundingClientRect().bottom <1200){
 	});
   }) ;
   onUnmounted(()=>{
-	window.removeEventListener('click');
+	window.removeEventListener('scroll');
   });
 
 
@@ -122,7 +122,7 @@ const breadcrumbs = ref([
 												<span class="text-[11px] text-gray-600">From </span><span class="text-xl font-medium text-gray-900">{{ product.price }}</span>
 											</div>
 											<div class=" flex justify-center items-baseline gap-2" >
-												<button class="mt-1 border border-gray-500 py-2 w-1/2 sm:w-28 text-md text-gray-500 hover:text-gray-700">
+												<button class="mt-1 border border-gray-500 py-2 w-1/2 sm:w-28 text-md text-gray-500 hover:text-gray-700" @click="addToCart(product,1)">
 													Add to cart
 												</button>
 											</div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -54,52 +55,8 @@ Route::get("/checkout", function(){
 
 
 
-Route::get('/cart', function () {
-
-	
-	if (Auth::user()) {
-		$products = Auth::user()->cartProducts;
-		foreach ($products as $key => $value) {
-			$prod = \App\Models\Product::with("images")->find($value->product_id);
-
-			$value->price = $prod->price;
-			$value->title = $prod->title;
-			$value->image = $prod->images[0];
-		}
-
-		return response()->json(["products"=> $products, "success" => true ]);
-	} else {
-
-		return response()->json(['products' => [], "success" => true]);
-	}
-})->middleware(['auth', 'verified']);
-Route::post('/cart', function () {
-	
-	if (Auth::user()) {
-		$user = \App\Models\Cart::create([
-			'product_id' => request()->product_id,
-			'user_id' => Auth::user()->id,
-			'quantity' => request()->quantity,
-		]);
-		
-		return response()->json(['success' => true]);
-	}else{
-		return response()->json(["success" => false]);
-	}
-})->middleware(['auth', 'verified']);;
-Route::delete('/cart/{id}', function ($id){
-	if(Auth::user()){
-		$prod = \App\Models\Cart::where('product_id',$id)->where('user_id',Auth::user()->id)->first();
-		if($prod){
-
-		$prod->delete();
-		return response()->json(['success' => true]);
-		}else{
-
-		return response()->json(["success" => false]);
-		}
-	}
-		return response()->json(["success" => false]);
-})->middleware(['auth', 'verified']);
+Route::get('/cart',[CartController::class,'index'])->middleware(['auth', 'verified']);
+Route::post('/cart', [CartController::class, 'store'])->middleware(['auth', 'verified']);;
+Route::delete('/cart/{id}',[CartController::class, 'destroy'])->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

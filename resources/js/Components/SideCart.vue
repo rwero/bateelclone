@@ -12,9 +12,9 @@
 				<div class="absolute inset-0 overflow-hidden">
 					<div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
 						<TransitionChild as="template"
-							enter="transform transition ease-in-out duration-500 sm:duration-700"
+							enter="transform transition ease-in-out duration-300 sm:duration-300"
 							enter-from="translate-x-full" enter-to="translate-x-0"
-							leave="transform transition ease-in-out duration-500 sm:duration-700"
+							leave="transform transition ease-in-out duration-300 sm:duration-300"
 							leave-from="translate-x-0" leave-to="translate-x-full">
 							<DialogPanel class="pointer-events-auto w-screen max-w-md">
 								<div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
@@ -33,12 +33,12 @@
 
 										<div class="mt-8">
 											<div class="flow-root">
-												<div v-if="$page.props.cartProducts.length ==0"
+												<div v-if="products.length == 0 "
 													class="text-gray-500 text-center mt-12">
 													No items</div>
 												<ul role="list" v-else class="-my-6 divide-y divide-gray-200">
-													<li v-for="product in $page.props.cartProducts" :key="product.id"
-														class="flex py-6">
+													<li v-for="product in products"
+														:key="product.product_id" class="flex py-6">
 														<div
 															class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
 															<img :src="product.image.path" :alt="product.imageAlt"
@@ -50,8 +50,10 @@
 																<div
 																	class="flex justify-between text-base font-medium text-gray-900">
 																	<h3>
-																		<a :href="route('products.show',product.product_id)">{{
-																		product.title }}</a>
+																		<a
+																			:href="route('products.show',product.product_id)">{{
+																			product.title }} --
+																			{{product.product_id}}</a>
 																	</h3>
 																	<p class="ml-4">{{ product.price }}</p>
 																</div>
@@ -110,62 +112,67 @@
 
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUpdated } from 'vue';
 import { usePage } from '@inertiajs/inertia-vue3'
 import axios from 'axios';
 usePage().props.value.cartProducts = [];
-defineProps(['open']);
+const props = defineProps(['open']);
 defineEmits(['close']);
+
+const products = ref([]);
 
 let subtotal = computed(() => {
 	let res = 0;
-	for (let prod of  usePage().props.value.cartProducts){
+	for (let prod of products.value) {
 		res += prod.price * prod.quantity;
 	}
 
 	return res
 });
+onUpdated(async () => {
+	if(props.open){
+
+	await getCartData();
+
+	}
+});
 onMounted(async () => {
-		console.log("logged in  as : ", usePage().props.value.auth.user);
+	await getCartData();
+})
+
+async function getCartData() {
+
+	console.log("logged in  as : ", usePage().props.value.auth.user);
 	if (usePage().props.value.auth.user) {
 
 		const res = await fetch("/cart");
 		const data = await res.json();
 
 		if (data.success) {
-			usePage().props.value.cartProducts = data.products;
+			products.value = data.products;
 		} else {
 			alert("Error");
 		}
 	} else {
 		const cartItems = localStorage.getItem("cart") || [];
-		if (cartItems.length != 0) {
-
-			usePage().props.value.cartProducts = JSON.parse(cartItems);
-		} else {
-			usePage().props.value.cartProducts = [];
-
-		}
+		products.value = JSON.parse(cartItems);
 	}
-
-})
+}
 
 async function handleRemove(id) {
 	console.log("removing : ", id);
-	usePage().props.value.cartProducts = usePage().props.value.cartProducts.filter(el => el.product_id != id);
+	products.value = products.value.filter(el => el.product_id != id);
 	if (usePage().props.value.auth.user) {
-const res = await axios.delete(`/cart/${id}`);
+		const res = await axios.delete(`/cart/${id}`);
 
 		if (res.status == 200) {
-	usePage().props.value.cartProducts = usePage().props.value.cartProducts.filter(el => el.product_id != id);
 			alert("Success");
 		} else {
 			alert("Error");
 		}
 	} else {
 
-		localStorage.setItem("cart", JSON.stringify(usePage().props.value.cartProducts));
-	usePage().props.value.cartProducts = usePage().props.value.cartProducts.filter(el => el.product_id != id);
+		localStorage.setItem("cart", JSON.stringify(products.value));
 	}
 }
 
