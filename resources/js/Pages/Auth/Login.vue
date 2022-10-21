@@ -18,7 +18,7 @@ const form = useForm({
     remember: false
 });
 
-const submit = () => {
+const submit = async () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });

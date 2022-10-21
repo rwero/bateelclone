@@ -57,7 +57,7 @@ hey.value = hey.value == '0' ? '418px' : '0'
                                                 : ''
                                         ">
                                         <a
-                                            href="https://bateel.com/en/customer/address/"
+                                            :href="route('address-book.index')"
                                             >Address Book</a
                                         >
                                     </li>
@@ -69,34 +69,12 @@ hey.value = hey.value == '0' ? '418px' : '0'
                                         " 
                                     >
                                         <a
-                                            href="https://bateel.com/en/customer/account/edit/"
+                                            :href="route('account.edit.show')"
                                             >Account Information</a
                                         >
                                     </li>
-                                    <li
-                                       :class="
-                                            route().current('account.payment.show')
-                                                ? 'font-bold !text-black'
-                                                : ''
-                                        " 
-                                    >
-                                        <a
-                                            href="https://bateel.com/en/vault/cards/listaction/"
-                                            >Stored Payment Methods</a
-                                        >
-                                    </li>
-                                    <li
-                                        :class="
-                                            route().current('.index')
-                                                ? 'font-bold !text-black'
-                                                : ''
-                                        " 
-                                    >
-                                        <a
-                                            href="https://bateel.com/en/paypal/billing_agreement/"
-                                            >Billing Agreements</a
-                                        >
-                                    </li>
+                                    
+                                    
                                     <li
                                        :class="
                                             route().current('account.reviews.index')
@@ -105,33 +83,22 @@ hey.value = hey.value == '0' ? '418px' : '0'
                                         "
                                     >
                                         <a
-                                            href="https://bateel.com/en/review/customer/"
+                                            :href="route('account.reviews.index')"
                                             >My Product Reviews</a
                                         >
                                     </li>
                                     <li
                                      :class="
-                                            route().current('.index')
+                                            route().current('newsletter.index')
                                                 ? 'font-bold !text-black'
                                                 : ''
                                         ">
                                         <a
-                                            href="https://bateel.com/en/newsletter/manage/"
+                                            :href="route('newsletter.index')"
                                             >Newsletter Subscriptions</a
                                         >
                                     </li>
-                                    <li
-                                     :class="
-                                            route().current('.index')
-                                                ? 'font-bold !text-black'
-                                                : ''
-                                        " 
-                                    >
-                                        <a
-                                            href="https://bateel.com/en/amstorecredit/"
-                                            >Store Credit &amp; Refunds</a
-                                        >
-                                    </li>
+                                    
 
                                 </ul>
                     </div>

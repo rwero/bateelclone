@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
+ * @extends \Illugate\Database\Eloquent\Factories\Factory<\App\Models\Order>
  */
 class OrderFactory extends Factory
 {
@@ -18,8 +18,9 @@ class OrderFactory extends Factory
 	{
 		return [
 			'user_id' => $this->faker->numberBetween(1, 50),
-			'delivery_fee' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 999.99),
-			'subtotal' =>  $this->faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 999.99),
+			'delivery_fee' => $this->faker->randomFloat( 2,  2000,  99999),
+			'subtotal' =>  $this->faker->randomFloat(  2,  2000,   99999),
+			'transaction_id' =>  $this->faker->sentence(),
 			'state_id' => $this->faker->numberBetween(1, 6),
 		];
 	}

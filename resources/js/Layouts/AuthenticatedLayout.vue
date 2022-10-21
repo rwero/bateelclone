@@ -165,14 +165,15 @@ const searchTerm = ref("");
 								:active="route().current('contact.index')">
 								{{ $page.props.auth.user.first_name }}
 							</ResponsiveNavLink>
-							<button  @click="showCart = true"
-							class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
+						</div>
+
+							<button   @click="showCart = true"
+							class="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
 								>
 								My cart
 						</button>
-						</div>
-
 						<div class=" space-y-1">
+
 
 							<ResponsiveNavLink v-if="!$page.props.auth.user" :href="route('login')" as="button"
 								class="w-full text-left">

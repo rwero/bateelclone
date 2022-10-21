@@ -1,35 +1,36 @@
-import axios from 'axios';
-import { usePage } from '@inertiajs/inertia-vue3'
 
-export async function addToCart(prod, qte){
+export function getCartProducts() {
 
-	console.log("adding ",prod.title, " to cart" );
-	if(!usePage().props.value.auth.user){
+	const cartItems = localStorage.getItem("cart") || "[]";
+	return JSON.parse(cartItems);
+}
 
-let cart = JSON.parse(localStorage.getItem("cart"));
+
+export async function addToCart(prod, qte) {
+    console.log("adding ", prod.title, " to cart");
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    if (cart.filter((el) => el.product_id == prod.id).length > 0) {
+        alert("already in cart");
+        return;
+    }
+    cart.push({
+        product_id: prod.id,
+        quantity: Number(qte),
+        price: prod.price,
+        image: prod.images[0],
+        title: prod.title,
+    });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("added successfully");
+}
+export function formatDate(date){
 	
-	if(cart.filter(el => el.product_id == prod.id).length > 0){
-		alert("already in cart");
-		return;
-	}
-		cart.push({product_id:prod.id, quantity : Number(qte),price:prod.price, image: prod.images[0],title : prod.title});
-		console.log("not logged in");
-localStorage.setItem("cart", JSON.stringify(cart));
-		alert("added successfully");
-	}else{
-
-		try {
-		const res = await axios.post("/cart",{product_id:prod.id, quantity : Number(qte)});
-			
-		alert("added successfully");
-		} catch (error) {
-			if(error.response.status == 409){
-				alert("Already in cart");
-			}else {
-				alert(error.response.statusText)
-			}
-			
-		}
-		
-	}
+let d  = (new Date(date)).toUTCString().split(" GMT")[0];
+return d.substring(0, d.lastIndexOf(" "))
+}
+export const formatCurrency = (price)=>{
+	
+	price  = (price / 100);
+	return price.toLocaleString('en-US',  {style:"currency", currency:'USD'});
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
 			$table->string('title');
 			$table->string('description');
-			$table->decimal('price', $precision = 10, $scale = 2);
+			$table->integer('price')->default(0);
 			$table->smallInteger('type');
 			$table->integer('stars');
 			$table->integer('reviews');

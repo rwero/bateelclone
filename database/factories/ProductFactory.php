@@ -19,8 +19,8 @@ class ProductFactory extends Factory
         return [
             'title' => $this->faker->unique()->sentence(1),
 				'description' => $this->faker->text(),
-				'price' => $this->faker->randomFloat($nbMaxDecimals=2,$min=20,$max=999.99 ),
-				'type' =>  $this->faker->numberBetween($int1 = 1,$int2=2),
+				'price' => $this->faker->numberBetween(20000,100000),
+				'type' =>  $this->faker->numberBetween(1,2),
 				'stars' => $this->faker->numberBetween(1,5),
 				'reviews' => $this->faker->numberBetween(1,200)
         ];

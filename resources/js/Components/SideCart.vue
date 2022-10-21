@@ -37,8 +37,8 @@
 													class="text-gray-500 text-center mt-12">
 													No items</div>
 												<ul role="list" v-else class="-my-6 divide-y divide-gray-200">
-													<li v-for="product in products"
-														:key="product.product_id" class="flex py-6">
+													<li v-for="product in products" :key="product.product_id"
+														class="flex py-6">
 														<div
 															class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
 															<img :src="product.image.path" :alt="product.imageAlt"
@@ -65,7 +65,7 @@
 																<div class="flex">
 																	<button type="button"
 																		class="font-medium text-indigo-600 hover:text-indigo-500"
-																		@click="handleRemove(product.product_id)">Remove</button>
+																		@click="removeProductFromCart(product.product_id)">Remove</button>
 																</div>
 															</div>
 														</div>
@@ -112,10 +112,8 @@
 
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-import { ref, onMounted, computed, onUpdated } from 'vue';
-import { usePage } from '@inertiajs/inertia-vue3'
-import axios from 'axios';
-usePage().props.value.cartProducts = [];
+import { ref, onMounted, computed, onUpdated  } from 'vue';
+import {getCartProducts } from '../../js/functions';
 const props = defineProps(['open']);
 defineEmits(['close']);
 
@@ -129,51 +127,23 @@ let subtotal = computed(() => {
 
 	return res
 });
-onUpdated(async () => {
-	if(props.open){
 
-	await getCartData();
+onUpdated(async () => {
+	if (props.open) {
+
+		products.value =  getCartProducts();
 
 	}
 });
+
 onMounted(async () => {
-	await getCartData();
-})
+	products.value =  getCartProducts();
+});
 
-async function getCartData() {
-
-	console.log("logged in  as : ", usePage().props.value.auth.user);
-	if (usePage().props.value.auth.user) {
-
-		const res = await fetch("/cart");
-		const data = await res.json();
-
-		if (data.success) {
-			products.value = data.products;
-		} else {
-			alert("Error");
-		}
-	} else {
-		const cartItems = localStorage.getItem("cart") || [];
-		products.value = JSON.parse(cartItems);
-	}
-}
-
-async function handleRemove(id) {
+async function removeProductFromCart(id) {
 	console.log("removing : ", id);
 	products.value = products.value.filter(el => el.product_id != id);
-	if (usePage().props.value.auth.user) {
-		const res = await axios.delete(`/cart/${id}`);
-
-		if (res.status == 200) {
-			alert("Success");
-		} else {
-			alert("Error");
-		}
-	} else {
-
-		localStorage.setItem("cart", JSON.stringify(products.value));
-	}
+	localStorage.setItem("cart", JSON.stringify(products.value));
 }
 
 </script>

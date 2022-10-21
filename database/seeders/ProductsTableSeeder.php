@@ -18,7 +18,7 @@ class ProductsTableSeeder extends Seeder
 			[
 				'title' => 'Wanan Dates',
 				'description' => "A Bateel world-exclusive, our organic Wanan dates are mildly sweet and wholly satisfying—a superb treat that's perfect for gifting.",
-				'price' => 54.00,
+				'price' => 5400,
 				'type' => 1,
 				'stars' => 4.5,
 				'reviews' => 50
@@ -27,7 +27,7 @@ class ProductsTableSeeder extends Seeder
 			[
 				'title' => 'Khidri Dates',
 				'description' => "A Bateel bestseller, our organic Khidri dates are sweet and have a delightfully chewy texture.",
-				'price' => 54.00,
+				'price' => 5400,
 				'type' => 1,
 				'stars' => 4.9,
 				'reviews' => 6
@@ -36,7 +36,7 @@ class ProductsTableSeeder extends Seeder
 			[
 				'title' => 'Medjool Dates',
 				'description' => "Deliciously sweet and succulent, your search for the finest quality organic Medjool dates ends at Bateel.",
-				'price' => 54.00,
+				'price' => 5400,
 				'type' => 1,
 				'stars' => 5,
 				'reviews' => 1
@@ -45,7 +45,7 @@ class ProductsTableSeeder extends Seeder
 			[
 				'title' => 'Sokari Dates',
 				'description' => "Our impeccable organic Sokari dates have a creamy, sweet taste and feature a distinctively creased skin, making the ideal gift for that special someone. ",
-				'price' => 54.00,
+				'price' => 5400,
 				'type' => 1,
 				'stars' => 5,
 				'reviews' => 1
@@ -54,7 +54,7 @@ class ProductsTableSeeder extends Seeder
 			[
 				'title' => 'Kholas Dates',
 				'description' => "Bateel's organic Kholas dates are deliciously toffee-flavoured without being too sweet.",
-				'price' => 54.00,
+				'price' => 5400,
 				'type' => 1,
 				'stars' => 5,
 				'reviews' => 2
@@ -63,7 +63,7 @@ class ProductsTableSeeder extends Seeder
 	[
 				'title' => 'Segai Dates',
 				'description' => "Bateel's organic Segai dates are deliciously sugary at the top and mildly sweet at the base.",
-				'price' => 54.00,
+				'price' => 5400,
 				'type' => 1,
 				'stars' => 5,
 				'reviews' => 2

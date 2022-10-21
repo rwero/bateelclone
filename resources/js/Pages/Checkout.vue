@@ -1,40 +1,85 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import TextInput from "@/Components/TextInput.vue";
+import Textinput from "@/Components/TextInput.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { PhoneIcon, CheckCircleIcon } from "@heroicons/vue/24/solid";
+import { loadStripe } from "@stripe/stripe-js";
+import { usePage } from "@inertiajs/inertia-vue3";
+import {getCartProducts} from '../functions';
+import axios from "axios";
 
 const header = ref(true);
+const products = ref([]);
+const stripe = ref({});
+const cardElement = ref({});
+const processing = ref(false);
 
-const products = [
-	{
-		id: 1,
-		name: "Segai Dates",
-		href: "#",
-		color: "Salmon",
-		price: "$90.00",
-		quantity: 1,
-		imageSrc:
-			"https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/0/1/01_sgai_lf.jpg",
-		imageAlt:
-			"Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-	},
-	{
-		id: 2,
-		name: "Ajwa Dates",
-		href: "#",
-		color: "Blue",
-		price: "$32.00",
-		quantity: 1,
-		imageSrc:
-			"https://bateel.com/media/catalog/product/cache/db93ac8ff02164348dcd3b18eaad565a/0/1/01_ajwa_lf.jpg",
-		imageAlt:
-			"Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-	},
-	// More products...
-];
+const user = computed(() => usePage().props.value.auth.user);
+console.log("dd user : ", user.value);
+
+onMounted(async () => {
+	products.value = getCartProducts();
+
+	stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_KEY);
+	const elements = stripe.value.elements();
+	cardElement.value = elements.create('card', {
+		classes: {
+			base: 'bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-base outline-none text-gray-700 p-3 leading-8 transition-colors duration-200 ease-in-out'
+
+		}
+
+	});
+	cardElement.value.mount('#card-element');
+});
+let subtotal = computed(() => {
+	let res = 0;
+	for (let prod of products.value) {
+		res += prod.price * prod.quantity;
+	}
+
+	return res
+});
+const processPayment = async () => {
+	processing.value = true;
+	const { paymentMethod, error } = await stripe.value.createPaymentMethod(
+		'card', cardElement.value, {
+		billing_details: {
+			name: user.value.first_name + ' ' + user.value.last_name,
+			email: user.value.email,
+			address: {
+				line1: user.value.address,
+				city: user.value.city,
+				state: user.value.state,
+				postal_code: user.value.zip_code
+			}
+		}
+	}
+	);
+	if (error) {
+		processing.value = false;
+		console.error(error);
+	} else {
+		console.log("metode : ",paymentMethod);
+		user.value.payment_method_id = paymentMethod.id;
+		user.value.subtotal = subtotal.value;
+		user.value.delivery_fee = 500;
+		user.value.cart = JSON.stringify(products.value);
+		console.log('user : ',user.value);
+		const res = await axios.post("/purchase", user.value);
+		console.log("THE RESULT : ",res);
+		processing.value = false;
+		if(res.status == 200){
+			console.log("200");
+			products.value = [];
+			localStorage.setItem("cart", "[]");
+			window.location = route('orders.show');
+
+		}
+	}
+
+}
 </script>
 
 <template>
@@ -88,8 +133,8 @@ const products = [
 											<div class="col-span-6 sm:col-span-3">
 												<label for="first-name"
 													class="block text-sm font-medium text-gray-700">First name</label>
-												<input type="text" name="first-name" id="first-name"
-													autocomplete="given-name"
+												<input :disabled="processing" type="text" name="first-name"
+													id="first-name" autocomplete="given-name"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
 													:value="
 														$page.props.auth.user
@@ -100,8 +145,8 @@ const products = [
 											<div class="col-span-6 sm:col-span-3">
 												<label for="last-name"
 													class="block text-sm font-medium text-gray-700">Last name</label>
-												<input type="text" name="last-name" id="last-name"
-													autocomplete="family-name"
+												<input :disabled="processing" type="text" name="last-name"
+													id="last-name" autocomplete="family-name"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
 													:value="
 														$page.props.auth.user
@@ -113,8 +158,8 @@ const products = [
 												<label for="email-address"
 													class="block text-sm font-medium text-gray-700">Email
 													address</label>
-												<input type="text" name="email-address" id="email-address"
-													autocomplete="email"
+												<input :disabled="processing" type="text" name="email-address"
+													id="email-address" autocomplete="email"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
 													:value="
 														$page.props.auth.user
@@ -129,7 +174,8 @@ const products = [
 														class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
 														<PhoneIcon class="h-5 w-5" />
 													</span>
-													<input type="text" name="company-website" id="company-website"
+													<input :disabled="processing" type="text" name="company-website"
+														id="company-website"
 														class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
 														placeholder />
 												</div>
@@ -138,7 +184,8 @@ const products = [
 											<div class="col-span-6 sm:col-span-3">
 												<label for="country"
 													class="block text-sm font-medium text-gray-700">Country</label>
-												<select id="country" name="country" autocomplete="country-name"
+												<select :disabled="processing" id="country" name="country"
+													autocomplete="country-name"
 													class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
 													<option>United States</option>
 													<option>Canada</option>
@@ -152,15 +199,17 @@ const products = [
 												<label for="street-address"
 													class="block text-sm font-medium text-gray-700">Street
 													address</label>
-												<input type="text" name="street-address" id="street-address"
-													autocomplete="street-address"
+												<input :disabled="processing" type="text" name="street-address"
+													id="street-address" autocomplete="street-address"
+													v-model="user.address"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 											</div>
 
 											<div class="col-span-6 sm:col-span-6 lg:col-span-2">
 												<label for="city"
 													class="block text-sm font-medium text-gray-700">City</label>
-												<input type="text" name="city" id="city" autocomplete="address-level2"
+												<input :disabled="processing" type="text" name="city" id="city"
+													autocomplete="address-level2" v-model="user.city"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 											</div>
 
@@ -168,8 +217,8 @@ const products = [
 												<label for="region"
 													class="block text-sm font-medium text-gray-700">State /
 													Province</label>
-												<input type="text" name="region" id="region"
-													autocomplete="address-level1"
+												<input :disabled="processing" type="text" name="region" id="region"
+													autocomplete="address-level1" v-model="user.state"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 											</div>
 
@@ -177,8 +226,8 @@ const products = [
 												<label for="postal-code"
 													class="block text-sm font-medium text-gray-700">ZIP / Postal
 													code</label>
-												<input type="text" name="postal-code" id="postal-code"
-													autocomplete="postal-code"
+												<input :disabled="processing" type="text" name="postal-code"
+													id="postal-code" autocomplete="postal-code" v-model="user.zip_code"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 											</div>
 										</div>
@@ -207,7 +256,7 @@ const products = [
 													<p class="text-gray-500">4-10 business days</p>
 													<p class="mt-6 font-bold">$5.00</p>
 												</div>
-												<div class="rounded-lg border  border-gray-300 p-4">
+												<div class="rounded-lg border  border-gray-300 p-4 hidden">
 													<div class="flex items-center justify-between">
 														<span class="font-bold">Express</span>
 														<CheckCircleIcon class="h-6 w-6 hidden" />
@@ -221,52 +270,22 @@ const products = [
 											<h2 class="text-xl font-bold ">Payment</h2>
 											<div class="flex gap-8 items-center pt-6">
 												<div class="flex items-center justify-start gap-3">
-													<input type="radio" name="payment" id="cc"
-														class="focus:ring-0 border border-gray-300" />
+													<input :disabled="processing" type="radio" name="payment" id="cc"
+														class="focus:ring-0 border border-gray-300" checked />
 													<label for="cc" class="text-gray-700">Credit Card</label>
 												</div>
 
-												<div class="flex items-center justify-start gap-3">
-													<input type="radio" name="payment" id="pp"
-														class="focus:ring-0 border border-gray-300" />
-													<label for="pp" class="text-gray-700">Paypal</label>
-												</div>
+											</div>
 
-												<div class="flex items-center justify-start gap-3">
-													<input type="radio" name="payment" id="et"
-														class="focus:ring-0 border border-gray-300" />
-													<label for="et" class="text-gray-700">eTransfer</label>
-												</div>
+											<div class="pt-6 pb-4">
+
+												<div id="card-element"></div>
 											</div>
-											<div class="col-span-6 2 mt-6">
-												<label for="card-number"
-													class="block text-sm font-medium text-gray-700">Card number</label>
-												<input type="text" name="card-number" id="card-number"
-													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-											</div>
-											<div class="col-span-6 mt-6">
-												<label for="name-on-card"
-													class="block text-sm font-medium text-gray-700">Name on card</label>
-												<input type="text" name="name-on-card" id="name-on-card"
-													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-											</div>
-											<div class="col-span-6 grid grid-cols-4 gap-4 mt-6">
-												<div class="col-span-3">
-													<label for="expiration"
-														class="block text-sm font-medium text-gray-700">Expiration
-														date(MM/YY)</label>
-													<input type="text" name="expiration" id="expiration"
-														class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-												</div>
-												<div class="col-span-1">
-													<label for="CVC"
-														class="block text-sm font-medium text-gray-700">CVC</label>
-													<input type="text" name="CVC" id="CVC"
-														class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-												</div>
-											</div>
+
 										</div>
+
 									</div>
+
 								</div>
 							</form>
 						</div>
@@ -276,10 +295,10 @@ const products = [
 							<h2 class="text-xl font-bold pb-2 border-b border-gray-100 mb-4">Summary</h2>
 							<div class="flow-root">
 								<ul role="list" class="-my-6 divide-y divide-gray-200">
-									<li v-for="product in products" :key="product.id" class="flex py-6">
+									<li v-for="product in products" :key="product.product_id" class="flex py-6">
 										<div
 											class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-											<img :src="product.imageSrc" :alt="product.imageAlt"
+											<img :src="product.image.path" alt=""
 												class="h-full w-full object-cover object-center" />
 										</div>
 
@@ -287,15 +306,14 @@ const products = [
 											<div>
 												<div class="flex justify-between text-base font-medium text-gray-900">
 													<h3>
-														<a :href="product.href">
+														<a :href='route("products.show" , product.product_id)'>
 															{{
-															product.name
+															product.title
 															}}
 														</a>
 													</h3>
 													<p class="ml-4">{{ product.price }}</p>
 												</div>
-												<p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
 											</div>
 											<div class="flex flex-1 items-end justify-between text-sm">
 												<p class="text-gray-500">Qty {{ product.quantity }}</p>
@@ -312,7 +330,7 @@ const products = [
 							<div class="border-t border-gray-200 mt-6 pt-4">
 								<div class="flex justify-between text-base font-medium text-gray-900 mb-2">
 									<p>Subtotal</p>
-									<p>$262.00</p>
+									<p>${{subtotal}}</p>
 								</div>
 
 								<div class="flex justify-between text-base font-medium text-gray-900 my-2">
@@ -322,13 +340,13 @@ const products = [
 
 								<div class="flex justify-between text-base font-medium text-gray-900 my-2">
 									<p>Total</p>
-									<p>$69.00</p>
+									<p>${{subtotal + 5.00}}</p>
 								</div>
 
 								<div class="mt-6">
-									<a :href="route('checkout.show')"
-										class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Confirm
-										order</a>
+									<button @click="processPayment"
+										class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+										v-text="processing ? 'Processing...': 'Confirm Order'"></button>
 								</div>
 							</div>
 						</div>
