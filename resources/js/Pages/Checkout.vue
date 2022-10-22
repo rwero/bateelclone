@@ -60,6 +60,7 @@ const processPayment = async () => {
 	if (error) {
 		processing.value = false;
 		console.error(error);
+		alert(error.message);
 	} else {
 		console.log("metode : ",paymentMethod);
 		user.value.payment_method_id = paymentMethod.id;
@@ -74,7 +75,7 @@ const processPayment = async () => {
 			console.log("200");
 			products.value = [];
 			localStorage.setItem("cart", "[]");
-			window.location = route('orders.show');
+			window.location = route('orders.index');
 
 		}
 	}
