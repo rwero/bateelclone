@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref, onMounted, onUnmounted } from "vue";
 
-import { addToCart,formatCurrency } from '../functions';
+import { addToCart } from '../functions';
 
 /* 		if(el.getBoundingClientRect().bottom < window.pageYOffset + window.screen.availHeight  ){
 			console.log("WSSELnA");
@@ -15,7 +15,11 @@ let products = ref();
 let last_id = ref(0);
 let get_data = false
 
-
+const formatCurrency = (price)=>{
+	
+	price  = (price / 100);
+	return price.toLocaleString('en-US',  {style:"currency", currency:'USD'});
+}
 async function loadMore() {
 	if (!get_data) { return; }
 	get_data = false;

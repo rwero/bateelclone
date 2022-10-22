@@ -4,7 +4,7 @@ import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from "@headlessui/vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
-import {addToCart} from '../functions';
+import {addToCart,formatDate} from '../functions';
 import {
 	StarIcon,
 	PlusIcon,
@@ -14,27 +14,8 @@ import {
 } from "@heroicons/vue/20/solid";
 
 const qte = ref(1);
-const reviews = ref([
-	{
-		id: 1,
-		first_name: "Redouane",
-		last_name: "Moussaoui",
-		date: "July 6, 2022",
-		rating: 5,
-		review: "Quality of goods was good . All the dates were of consistent size and fresh. Packing was good and promptly delivered. ",
-	},
-	{
-		id: 2,
-		first_name: "Redouane",
-		last_name: "Moussaoui",
-		rating: 4,
-		date: "July 6, 2022",
-		review: "Quality of goods was good . All the dates were of consistent size and fresh. Packing was good and promptly delivered. ",
-	},
-]);
 
 
-const open = ref(false);
 const props = defineProps({
 	product: Object,
 });
@@ -151,7 +132,7 @@ const props = defineProps({
 											</p>
 											<a href="#"
 												class="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">{{
-												$page.props.product.reviews
+												$page.props.product.all_reviews.length
 												}}
 												reviews</a>
 										</div>
@@ -221,17 +202,17 @@ const props = defineProps({
                                             'h-5 w-5 flex-shrink-0',
                                         ]" aria-hidden="true" />
 									</div> <span class="text-gray-500 text-xs">{{$page.props.product.rating}} Based on
-										{{$page.props.product.reviews}} reviews</span>
+										{{$page.props.product.all_reviews.length}} reviews</span>
 								</div>
 
-								<div class="p-5 mt-4 border-b last:border-none" v-for="review in reviews"
+								<div class="p-5 mt-4 border-b last:border-none" v-for="review in $page.props.product.all_reviews"
 									:key="review.id">
 									<h2 class="font-bold text-xl">
-										{{ review.first_name }}
-										{{ review.last_name }}
+										{{ review.user.first_name }}
+										{{ review.user.last_name }}
 									</h2>
 									<p class="text-gray-500">
-										{{ review.date }}
+										{{  formatDate(review.created_at)}}
 									</p>
 
 									<div class="flex items-center mt-3 -translate-x-1">

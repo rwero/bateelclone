@@ -24,4 +24,7 @@ class Product extends Model
    public function orders(){
 	return $this->belongsToMany(\App\Models\Order::class);
    }
+   public function allReviews(){
+	return $this->hasMany(\App\Models\Review::class);
+   }
 }

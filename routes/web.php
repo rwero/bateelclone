@@ -38,7 +38,7 @@ Route::get('/products', function () {
 
 Route::get('/products/{id}', function ($id){
 	
-	$product = \App\Models\Product::with('images')->findOrFail($id);
+	$product = \App\Models\Product::with('images')->with('allReviews.user')->findOrFail($id);
     return Inertia::render('Product', [
         'product'=>$product
     ]);

@@ -25,18 +25,17 @@ $this->call(\Database\Seeders\OrderState::class);
  User::factory(10)->has(
     Order::factory(3)
         ->has(OrderProduct::factory(3))
-)->create();
+)->hasReviews(10)->create();
        
 
 
          \App\Models\User::factory()->has(
     Order::factory(5)
         ->has(OrderProduct::factory(3))
-)->create([
+)->hasReviews(10)->create([
              'first_name' => 'Redouane',
              'last_name' => 'Moussaui',
              'email' => 'red@email.com',
          ]);
-		
     }
 }

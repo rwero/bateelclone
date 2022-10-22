@@ -75,8 +75,11 @@ class UserController extends Controller
 
 	public function reviews()
 	{
+		
+		$reviews = \App\Models\Review::with('product.images')->where('user_id',Auth::user()->id)->get();
+		
 
-		return Inertia::render('Account/ProductReviews');
+		return Inertia::render('Account/ProductReviews', ['reviews'=> $reviews]);
 	}
 
 	public function edit()
