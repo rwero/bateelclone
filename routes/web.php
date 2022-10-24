@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
+use App\Mail\SendEmailConfirmationLink;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\MockObject\Stub\ReturnReference;
 
 /*
@@ -50,6 +53,9 @@ Route::get("/u/newsletter", [UserController::class, 'newsletter'])->middleware([
 Route::get("/u/reviews", [UserController::class, 'reviews'])->middleware(['auth', 'verified'])->name('account.reviews.index');
 Route::get("/u/edit", [UserController::class, 'edit'])->middleware(['auth', 'verified'])->name('account.edit.show');
 Route::get("/u/address-book", [UserController::class, 'addressBook'])->middleware(['auth', 'verified'])->name('address-book.index');
+Route::post("/u/edit-contact-info",[UserController::class,'editContactInfo'])->middleware(['auth', 'verified']);
+Route::post("/u/edit-address-book",[UserController::class,'editAddresBook'])->middleware(['auth', 'verified']);
+
 
 Route::get("/checkout", function(){
     return Inertia::render('Checkout');
@@ -60,7 +66,19 @@ Route::get("/checkout", function(){
 Route::get('/cart',[CartController::class,'index'])->middleware(['auth', 'verified']);
 Route::post('/cart', [CartController::class, 'store'])->middleware(['auth', 'verified']);;
 Route::delete('/cart/{id}',[CartController::class, 'destroy'])->middleware(['auth', 'verified']);
+Route::post("/purchase", [UserController::class, 'purchase'])->middleware(['auth', 'verified']);
 
-Route::post("/purchase", [UserController::class, 'purchase'])->middleware(['auth', 'verified']);;
+/* Route::post('/api/review', [ReviewController::class, 'store'])->middleware(['auth','verified']); */
+Route::post('/api/review', [ReviewController ::class, 'store'])->middleware(['auth','verified']);
 
+/* Route::get("/testmail", function (){
+Mail::to('fake@email.com')->send(new SendEmailConfirmationLink);
+$some_products = \App\Models\Product::with('images')->where('id' ,'<' ,'10')->get();
+    return Inertia::render('Home', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+		'products' => $some_products
+    ]);
+});
+ */
 require __DIR__.'/auth.php';

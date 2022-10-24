@@ -1,11 +1,22 @@
 <script setup>
 import AccountLayout from '@/Layouts/AccountLayout.vue';
-import { computed } from 'vue';
+import { ref } from 'vue';
 import { PhoneIcon } from "@heroicons/vue/24/solid";
 import { usePage } from "@inertiajs/inertia-vue3";
+import axios from 'axios';
 
-const user = computed(() => usePage().props.value.auth.user);
+const user = ref( usePage().props.value.auth.user);
 
+const saveInfo = async ()=>{
+	const res = await axios.post("/u/edit-address-book" , user.value);
+	if(res.status == 200){
+		if(res.data.success){
+			alert("Success");
+		}else{
+			alert("Error");
+		}
+	}
+}
 
 </script>
 <template>
@@ -39,12 +50,22 @@ const user = computed(() => usePage().props.value.auth.user);
 						<div class="col-span-6 sm:col-span-3">
 							<label for="country" class="block text-sm font-medium text-gray-700">Country</label>
 							<select id="country" name="country" autocomplete="country-name"
+								v-model="user.country"
 								class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-								<option>United States</option>
-								<option>Canada</option>
-								<option>Mexico</option>
-
-								<option selected>Algeria</option>
+								<option value="United States">United States</option>
+								<option value="Canada">Canada</option>
+								<option value="Mexico">Mexico</option>
+<option value="Algeria">Algeria</option>
+<option value="Equatorial Guinea">Equatorial Guinea</option>
+<option value="Grenada">Grenada</option>
+<option value="French Southern Territories">French Southern Territories</option>
+<option value="Sudan">Sudan</option>
+<option value="Bolivia">Bolivia</option>
+<option value="Somalia">Somalia</option>
+<option value="Svalbard & Jan Mayen Islands ">Svalbard & Jan Mayen Islands </option>
+<option value="French Guiana">French Guiana</option>
+<option value="Monaco">Monaco</option>
+<option value="South Africa">South Africa</option>
 							</select>
 						</div>
 
@@ -82,6 +103,7 @@ const user = computed(() => usePage().props.value.auth.user);
 					<div class="flex items-center justify-end mx-4">
 
 						<button
+						@click="saveInfo"
 							class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">save</button>
 					</div>
 				</div>

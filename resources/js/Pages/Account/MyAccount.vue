@@ -42,22 +42,18 @@ import AccountLayout from '@/Layouts/AccountLayout.vue';
                           
                         </div>
                         <div class="block-content grid md:grid-cols-2 grid-cols-1">
-                            <div class="box box-billing-address mt-4">
-                                <div class="box-title font-bold p-4" > Default Billing Address </div>
-                                <div class="box-content px-4">
-                                    <address>
-                                        You have not set a default billing
-                                        address.
-                                    </address>
-                                </div>
-                            </div>
+                            
                             <div class="box box-shipping-address mt-4">
                                 <div class="box-title font-bold p-4" > Default Shipping Address</div>
                                 <div class="box-content px-4">
-                                    <address>
+                                    <address v-if="!$page.props.auth.user.address">
                                         You have not set a default shipping
                                         address.
                                     </address>
+									<address v-else>
+										
+{{$page.props.auth.user.address}}
+									</address>
                                 </div>
                             </div>
                         </div>

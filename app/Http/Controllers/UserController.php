@@ -75,16 +75,37 @@ class UserController extends Controller
 
 	public function reviews()
 	{
-		
-		$reviews = \App\Models\Review::with('product.images')->where('user_id',Auth::user()->id)->get();
-		
 
-		return Inertia::render('Account/ProductReviews', ['reviews'=> $reviews]);
+		$reviews = \App\Models\Review::with('product.images')->where('user_id', Auth::user()->id)->get();
+
+
+		return Inertia::render('Account/ProductReviews', ['reviews' => $reviews]);
 	}
 
 	public function edit()
 	{
 
 		return Inertia::render('Account/AccountInformation');
+	}
+	public function editAddresBook(Request $request)
+	{
+		$user = User::find(Auth::user()->id);
+		$user->address = request()->address;
+		$user->city = request()->city;
+		$user->state = request()->state;
+		$user->zip_code = request()->zip_code;
+		$user->country = request()->country;
+		$user->save();
+
+		return response()->json(['success' => true]);
+
+	}
+	public function editContactInfo(Request $request){
+		$user = User::find(Auth::user()->id);
+		$user->first_name = $request->first_name;
+		$user->last_name = $request->last_name;
+		$user->save();
+		return response()->json(["success" => true]);
+
 	}
 }

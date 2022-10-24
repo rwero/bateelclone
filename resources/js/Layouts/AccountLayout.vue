@@ -23,7 +23,7 @@ hey.value = hey.value == '0' ? '270px' : '0'
         </template>
 
         <template #main>
-            <div class="columns grid grid-cols-1 md:grid-cols-4 gap-6  my-12 font-sans max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="columns grid grid-cols-1 md:grid-cols-4 gap-6  my-6 font-sans max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div
                     class="rounded-lg bg-white px-4 py-2 text-left text-sm font-medium md:block hidden"
                 >
