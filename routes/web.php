@@ -28,27 +28,26 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', function () {
-	$some_products = \App\Models\Product::with('images')->where('id' ,'<' ,'10')->get();
-    return Inertia::render('Home', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
+	$some_products = \App\Models\Product::with('images')->where('id', '<', '10')->get();
+	return Inertia::render('Home', [
+		'canLogin' => Route::has('login'),
+		'canRegister' => Route::has('register'),
 		'products' => $some_products
-    ]);
-	
+	]);
 })->name("home.index");
 
 Route::get('/products', function () {
 	Auth::user()->is_admin = 1;
-	
-    return Inertia::render('AllProducts');
+
+	return Inertia::render('AllProducts');
 })->name('products.index');
 
-Route::get('/products/{id}', function ($id){
-	
+Route::get('/products/{id}', function ($id) {
+
 	$product = \App\Models\Product::with('images')->with('allReviews.user')->findOrFail($id);
-    return Inertia::render('Product', [
-        'product'=>$product
-    ]);
+	return Inertia::render('Product', [
+		'product' => $product
+	]);
 })->name('products.show');
 
 Route::get("/u/account", [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('account.show');
@@ -57,41 +56,40 @@ Route::get("/u/newsletter", [UserController::class, 'newsletter'])->middleware([
 Route::get("/u/reviews", [UserController::class, 'reviews'])->middleware(['auth', 'verified'])->name('account.reviews.index');
 Route::get("/u/edit", [UserController::class, 'edit'])->middleware(['auth', 'verified'])->name('account.edit.show');
 Route::get("/u/address-book", [UserController::class, 'addressBook'])->middleware(['auth', 'verified'])->name('address-book.index');
-Route::post("/u/edit-contact-info",[UserController::class,'editContactInfo'])->middleware(['auth', 'verified']);
-Route::post("/u/edit-address-book",[UserController::class,'editAddresBook'])->middleware(['auth', 'verified']);
+Route::post("/u/edit-contact-info", [UserController::class, 'editContactInfo'])->middleware(['auth', 'verified']);
+Route::post("/u/edit-address-book", [UserController::class, 'editAddresBook'])->middleware(['auth', 'verified']);
 
 
-Route::get("/checkout", function(){
-    return Inertia::render('Checkout');
+Route::get("/checkout", function () {
+	return Inertia::render('Checkout');
 })->middleware(['auth', 'verified'])->name('checkout.show');
 
 
 
-Route::get('/cart',[CartController::class,'index'])->middleware(['auth', 'verified']);
+Route::get('/cart', [CartController::class, 'index'])->middleware(['auth', 'verified']);
 Route::post('/cart', [CartController::class, 'store'])->middleware(['auth', 'verified']);;
-Route::delete('/cart/{id}',[CartController::class, 'destroy'])->middleware(['auth', 'verified']);
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->middleware(['auth', 'verified']);
 Route::post("/purchase", [UserController::class, 'purchase'])->middleware(['auth', 'verified']);
 
 /* Route::post('/api/review', [ReviewController::class, 'store'])->middleware(['auth','verified']); */
-Route::post('/api/review', [ReviewController ::class, 'store'])->middleware(['auth','verified']);
+Route::post('/api/review', [ReviewController::class, 'store'])->middleware(['auth', 'verified']);
 
-Route::get('/admin',function(Request $request){
+Route::get('/admin', function (Request $request) {
 	Admin::findOrFail(Auth::user()->id);
 	return Inertia::render("Admin/Admin");
-})->middleware(['auth','verified']);
-Route::get("dashboard", function (){
+})->middleware(['auth', 'verified']);
+Route::get("dashboard", function () {
 	$users = User::all();
 	$orders = Order::with('orderProducts.product.images')->with("user")->with('orderState')->get();
 	$order_states = OrderState::all();
 	$products = Product::with('images')->with("allReviews")->get();
 
-	$data = ['clients'=> $users, "orders" => $orders, "order_states" => $order_states, "products" => $products];
+	$data = ['clients' => $users, "orders" => $orders, "order_states" => $order_states, "products" => $products];
 	return response()->json(["success" => true, "data" => $data]);
-
-});
-Route::post("/dashboard/orderstate", function (){
+})->middleware(['auth', 'verified', 'admin']);
+Route::post("/dashboard/orderstate", function () {
 	try {
-		Order::where('id',request()->order_id)->update([
+		Order::where('id', request()->order_id)->update([
 			'state_id' => request()->state_id
 
 		]);
@@ -99,7 +97,8 @@ Route::post("/dashboard/orderstate", function (){
 	} catch (\Throwable $th) {
 		return response()->json(["success" =>  false]);
 	}
-});
+})->middleware(['auth', 'verified', 'admin']);
+
 /* Route::get("/testmail", function (){
 Mail::to('fake@email.com')->send(new SendEmailConfirmationLink);
 $some_products = \App\Models\Product::with('images')->where('id' ,'<' ,'10')->get();
@@ -110,4 +109,4 @@ $some_products = \App\Models\Product::with('images')->where('id' ,'<' ,'10')->ge
     ]);
 });
  */
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
