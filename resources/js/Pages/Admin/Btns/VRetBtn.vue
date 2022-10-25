@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<button  @click="this.$emit('back')">
+		<button  @click="$emit('back')">
 			<icon-arrow />
 		</button>
 	</div>
@@ -8,7 +8,7 @@
 
 <script setup>
 import IconArrow from '../icons/IconArrow.vue';
-defineEmits(['back']);
+const emits = defineEmits(['back']);
 </script>
 
 <style scoped>

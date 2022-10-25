@@ -9,15 +9,16 @@
 			<div class="card p-2">
 				<p class="heading">Revenus estimé</p>
 				<p> {{
-				store.data.orders.reduce(
-				(x, v) => x + (v.subtotal / 10 + v.delivery_fee ),
+				formatCurrency( store.data.orders.reduce(
+				(x, v) => x + (v.subtotal + v.delivery_fee ),
 				0,
+				)
 				)
 				}} </p>
 			</div>
 			<div class="card p-2">
 				<p class="heading">Ths month</p>
-				<p>144158.5DA</p>
+				<p>{{formatCurrency(14415850)}}</p>
 			</div>
 			<div class="card p-2">
 				<p class="heading">Orders</p>
@@ -32,7 +33,7 @@
 			</div>
 		</div>
 		<div class="charts-container">
-						<VOrdersChart class="card" />
+			<VOrdersChart class="card" />
 			<VRevenuChart class="card" />
 		</div>
 		<div class="charts-container">
@@ -105,7 +106,7 @@
 <script setup>
 import VOrdersChart from './VOrdersChart.vue';
 import VRevenuChart from './VRevenuChart.vue';
-
+import { formatCurrency } from "@/functions";
 import { useDataStore } from '../../../Stores/data';
 import { ref } from 'vue';
 
