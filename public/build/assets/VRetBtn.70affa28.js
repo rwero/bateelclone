@@ -1,0 +1,1 @@
+import t from"./IconArrow.d210ad04.js";import{_ as o}from"./_plugin-vue_export-helper.cdc0426e.js";import{o as _,e as n,a as s,f as a}from"./app.27d7f9b4.js";const r={__name:"VRetBtn",emits:["back"],setup(c){return(p,e)=>(_(),n("div",null,[s("button",{onClick:e[0]||(e[0]=m=>this.$emit("back"))},[a(t)])]))}},u=o(r,[["__scopeId","data-v-e31548d9"]]);export{u as default};

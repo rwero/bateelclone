@@ -100,6 +100,7 @@ const breadcrumbs = ref([
 							class="font-medium text-4xl text-gray-800 leading-tight p-6 lg:p-8 text-center lg:text-left">
 							All Products
 						</h2>
+						{{$page.props.auth}}
 						<div class="">
 							<div id="scroll" class="mx-auto max-w-2xl py-8 pt-0  px-6 lg:max-w-7xl lg:px-8">
 								<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-4"

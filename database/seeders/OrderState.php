@@ -15,12 +15,12 @@ class OrderState extends Seeder
 	public function run()
 	{
 		$states = [
-			['state' => 'confirmed'],
 			['state' => 'passed'],
+			['state' => 'confirmed'],
+			['state' => 'enroute'],
 			['state' => 'delivered'],
 			['state' => 'refused'],
-			['state' => 'canceled'],
-			['state' => 'enroute']
+			['state' => 'canceled']
 		];
 
 		foreach ($states as $key => $value) {

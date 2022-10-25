@@ -52,6 +52,9 @@ const props = defineProps({
 		<!-- </template> -->
 
 		<template #main>
+
+
+						{{$page.props.auth.user}}
 			<div>
 				<div class="flex transform text-left text-base transition md:my-8 md:px-4 max-w-7xl mx-auto">
 					<div

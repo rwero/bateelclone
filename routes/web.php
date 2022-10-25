@@ -4,14 +4,18 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use App\Mail\SendEmailConfirmationLink;
+use App\Models\Admin;
+use App\Models\Order;
+use App\Models\OrderState;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use PHPUnit\Framework\MockObject\Stub\ReturnReference;
 
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +38,7 @@ Route::get('/', function () {
 })->name("home.index");
 
 Route::get('/products', function () {
-	
+	Auth::user()->is_admin = 1;
 	
     return Inertia::render('AllProducts');
 })->name('products.index');
@@ -71,6 +75,31 @@ Route::post("/purchase", [UserController::class, 'purchase'])->middleware(['auth
 /* Route::post('/api/review', [ReviewController::class, 'store'])->middleware(['auth','verified']); */
 Route::post('/api/review', [ReviewController ::class, 'store'])->middleware(['auth','verified']);
 
+Route::get('/admin',function(Request $request){
+	Admin::findOrFail(Auth::user()->id);
+	return Inertia::render("Admin/Admin");
+})->middleware(['auth','verified']);
+Route::get("dashboard", function (){
+	$users = User::all();
+	$orders = Order::with('orderProducts.product.images')->with("user")->with('orderState')->get();
+	$order_states = OrderState::all();
+	$products = Product::with('images')->with("allReviews")->get();
+
+	$data = ['clients'=> $users, "orders" => $orders, "order_states" => $order_states, "products" => $products];
+	return response()->json(["success" => true, "data" => $data]);
+
+});
+Route::post("/dashboard/orderstate", function (){
+	try {
+		Order::where('id',request()->order_id)->update([
+			'state_id' => request()->state_id
+
+		]);
+		return response()->json(["success" =>  true]);
+	} catch (\Throwable $th) {
+		return response()->json(["success" =>  false]);
+	}
+});
 /* Route::get("/testmail", function (){
 Mail::to('fake@email.com')->send(new SendEmailConfirmationLink);
 $some_products = \App\Models\Product::with('images')->where('id' ,'<' ,'10')->get();
