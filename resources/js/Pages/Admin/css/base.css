@@ -60,6 +60,8 @@
 
 	--vz-border-color: #e9ebec;
     --vz-scroll-color:rgba(0,0,0,.5);
+	--vz-btn-bg:black;
+	--vz-btn-text:white;
 
 }
 .dark {
@@ -75,6 +77,8 @@
 
 	--vz-body-bg: #1a1d21;
 	--vz-body-color: #ced4da;
+	--vz-btn-bg : white;
+	--vz-btn-text:black;
 
 	--vz-vertical-menu-bg: #212529;
 	--vz-vertical-menu-item-color: #878a99;

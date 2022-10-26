@@ -37,7 +37,6 @@ Route::get('/', function () {
 })->name("home.index");
 
 Route::get('/products', function () {
-	Auth::user()->is_admin = 1;
 
 	return Inertia::render('AllProducts');
 })->name('products.index');

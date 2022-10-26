@@ -1,6 +1,12 @@
 <template>
 	<div class="container" v-if="!selectedProduct">
-			<h1>Products</h1>
+		<div class="flex items-center justify-between">
+
+			<h1 class="font-bold">Products</h1>
+		<div>
+			<button class= "font-bold text-xl px-4 py-2 mx-4 rounded-lg addbtn" >Add Product</button>
+		</div>
+		</div>
 
 			<div class="input-wrapper " style="margin:  1rem; margin-bottom: 1rem;">
             <div class="icon">
@@ -134,5 +140,9 @@ const filterSearch = computed(() => {
 .input {
 	padding-left: 40px;
 	margin-right: 1rem;
+}
+.addbtn{
+	color:var(--vz-btn-text);
+	background-color: var(--vz-btn-bg);
 }
 </style>
