@@ -2,7 +2,7 @@
 	<div class="order-container" v-if="!client">
 		<div class="container-main">
 			<div class="order-wrapper">
-				<v-ret-btn @back="this.$emit('back')" />
+				<v-ret-btn @back="$emit('back')" />
 				<h5>Order N° {{ order.id }} </h5>
 				<p style="opacity: 0.6;">{{`${new Date(order.created_at)}`.split("GMT")[0]}}</p>
 

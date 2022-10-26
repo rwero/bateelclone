@@ -1,7 +1,7 @@
 <template>
 	<div class="client-container">
 		<div class="container-main">
-			<v-ret-btn @back="this.$emit('back')" />
+			<v-ret-btn @back="$emit('back')" />
 			<div class="header">
 				<div class="image-container">
 					<img
