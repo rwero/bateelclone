@@ -14,27 +14,43 @@ import {
 	MinusIcon,
 	MinusSmallIcon,
 } from "@heroicons/vue/20/solid";
-import { computed } from "@vue/reactivity";
 
 const qte = ref(1);
 const review = ref({
-	review:'',
-	rating : 5,
-	product_id : usePage().props.value.product.id,
+	review: '',
+	rating: 5,
+	product_id: usePage().props.value.product.id,
+	update: false,
 });
+if (usePage().props.value.auth.user) {
+
+	let rev = usePage().props.value.product.all_reviews.filter(el => el.user_id == usePage().props.value.auth.user.id);
+	console.log("reg  len ", rev);
+	if (rev.length > 0) {
+		review.value.review = rev[0].review;
+		review.value.rating = rev[0].rating;
+		review.value.update = true;
+		review.value.id = rev[0].id;
+	}
+
+}
 console.log("rev : : ", review.value);
-const reviews = ref({});
 
 const addReview = async () => {
-	if(usePage().props.value.auth.user == null){
+	if (usePage().props.value.auth.user == null) {
+		console.log("test");
 		alert("Please login to add review");
 		return;
 	}
-	const res =  await axios.post('/api/review', review.value);
-	console.log('res ' , res);
-	if(res.status == 200){
-		window.location.reload();
-	}else{
+	const res = await axios.post('/api/review', review.value);
+	if (res.status == 200) {
+		if (res.data.success) {
+
+			window.location.reload();
+		}else{
+			alert("An arror happened");
+		}
+	} else {
 		alert("Error");
 	}
 
@@ -224,22 +240,19 @@ const props = defineProps({
 										        ? 'text-yellow-400'
 										        : 'text-gray-200',
 										    'h-5 w-5 flex-shrink-0',
-										]" aria-hidden="true"
-										@click="review.rating = rating +1"
-										 />
+										]" aria-hidden="true" @click="review.rating = rating +1" />
 									</div>
 									<div class="mt-4">
 										<textarea id="about" name="about" rows="5" v-model="review.review"
-											class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+											class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-700"
 											placeholder="Your description" />
 									</div>
 									<p class="mt-2 text-sm text-gray-500">Brief description of your experience with this
 										product.</p>
 									<div class="flex items-center justify-end mt-4">
-										<button @click="addReview" 
-											class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
-
-											Add
+										<button @click="addReview" class="flex items-center justify-center rounded-md border border-transparent
+											 bg-indigo-600 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 "
+											v-text="review.review ? 'Update': 'Add'">
 										</button>
 									</div>
 								</div>
@@ -267,7 +280,7 @@ const props = defineProps({
 										{{ review.user.last_name }}
 									</h2>
 									<p class="text-gray-500">
-										{{ formatDate(review.created_at)}}
+										{{ formatDate(review.updated_at)}}
 									</p>
 
 									<div class="flex items-center mt-3 -translate-x-1">

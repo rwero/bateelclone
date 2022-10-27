@@ -43,21 +43,34 @@ class ReviewController extends Controller
 		]);
 
 		try {
-			$rev = Review::create([
-				'product_id' => request()->product_id,
-				'user_id' => Auth::user()->id,
-				'review' => request()->review,
-				'rating' => request()->rating,
-			]);
-			$rev->product->reviews++;
+			$rev = null;
+			if (request()->update) {
+				$rev = Review::find(request()->id);
+				$rev->update([
+					"review" => request()->review,
+					'rating' => request()->rating,
+
+				]);
+			} else {
+
+				$rev = Review::create([
+					'product_id' => request()->product_id,
+					'user_id' => Auth::user()->id,
+					'review' => request()->review,
+					'rating' => request()->rating,
+
+				]);
+
+				$rev->product->reviews++;
+			}
 			$rev->product->stars =  Review::where('product_id', request()->product_id)->pluck('rating')->avg();
-$rev->product->save();
+			$rev->product->save();
 
 
 
 			return response()->json(['success' => true, 'rev' => $rev]);
 		} catch (\Throwable $th) {
-			return response()->json(["success" => false]);
+			return response()->json(["success" => false, "error" => $th]);
 		}
 	}
 
