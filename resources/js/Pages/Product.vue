@@ -26,6 +26,10 @@ console.log("rev : : ", review.value);
 const reviews = ref({});
 
 const addReview = async () => {
+	if(usePage().props.value.auth.user == null){
+		alert("Please login to add review");
+		return;
+	}
 	const res =  await axios.post('/api/review', review.value);
 	console.log('res ' , res);
 	if(res.status == 200){
@@ -232,7 +236,7 @@ const props = defineProps({
 									<p class="mt-2 text-sm text-gray-500">Brief description of your experience with this
 										product.</p>
 									<div class="flex items-center justify-end mt-4">
-										<button @click="addReview" :disabled="!$page.props.auth.user"
+										<button @click="addReview" 
 											class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
 
 											Add

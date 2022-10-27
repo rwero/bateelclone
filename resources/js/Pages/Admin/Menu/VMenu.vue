@@ -4,17 +4,14 @@
 		<div class="menu">
 
 			<div class="logo-wrapper">Bateel</div>
-			<button
-				class="btn"
-				v-for="(opt, i) in opts"
-				:key="i"
-				:class="{ selected: opt.comp === store.activeComponent }"
-				@click="changeActiveCmp(opt)"
+			<VMenuBtn 
+v-for="(opt, i) in opts" :key="i" :selected="opt.comp" :title="opt.title"
 			>
-				<div class="icon-wrapper"><component :is="opt.icon" /></div>
-                
-                <p> {{ opt.title }} </p>
-			</button>
+
+				<template #icon>
+					<component :is="opt.icon" />
+				</template>
+			</VMenuBtn>
 		</div>
 		<div class="empty" @click="store.menuOpen = false"></div>
 	</div>
@@ -41,17 +38,17 @@ export default {
 
 <script setup>
 import { ref } from 'vue';
+import VMenuBtn from "../Btns/VMenuBtn.vue";
 
-import { useDataStore } from '../../../Stores/data';
-const store = useDataStore();
+
 const opts = ref([
 	{
 		title: 'Dashboard',
 		comp: 'VDashboard',
 		icon: 'IconDashboard',
 	},
-	
-	
+
+
 	{
 		title: 'Clients',
 		comp: 'VClients',
@@ -74,10 +71,7 @@ const opts = ref([
 	},
 ]);
 
-function changeActiveCmp(opt) {
-	store.activeComponent = opt.comp;
-	store.menuOpen = window.screen.availWidth > 600;
-}
+
 </script>
 <style scoped>
 .menu-wrapper {
@@ -85,6 +79,7 @@ function changeActiveCmp(opt) {
 	z-index: 1;
 	display: flex;
 }
+
 .menu {
 	display: flex;
 	flex-direction: column;
@@ -95,45 +90,24 @@ function changeActiveCmp(opt) {
 	border-radius: 12px;
 }
 
-.btn {
-	display: flex;
-    align-items: center;
-    justify-content: center;
-    gap:10px;
-	width: 100%;
-	color: var(--vz-vertical-menu-item-color);
-	background: none;
-	padding: 1rem;
-	font-size: 1rem;
-	text-align: left;
-}
-.btn p{
-    width:100px;
-}
-.btn:hover {
-	color: var(--vz-vertical-menu-item-hover-color);
-}
-
 .empty {
 	width: calc(100vw - 250px);
 	height: 100%;
 	background: rgba(0, 0, 0, 0.3);
 }
+
 @media (min-width: 600px) {
 	.empty {
 		width: 0;
 	}
 }
-.selected {
-	font-weight: bold;
-	color: var(--vz-vertical-menu-item-active-color)
-}
+
 .logo-wrapper {
 	font-size: 1.5rem;
 	font-weight: bold;
-    text-align: center;
-    padding:1rem  0;
-    border-bottom: 1px dashed var(--vz-border-color);
-    margin-bottom: 2rem;
+	text-align: center;
+	padding: 1rem 0;
+	border-bottom: 1px dashed var(--vz-border-color);
+	margin-bottom: 2rem;
 }
 </style>

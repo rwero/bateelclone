@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<button  @click="$emit('back')">
+		<button  @click="$emit('back')"  class="bg-transparent">
 			<icon-arrow />
 		</button>
 	</div>
@@ -10,12 +10,3 @@
 import IconArrow from '../icons/IconArrow.vue';
 const emits = defineEmits(['back']);
 </script>
-
-<style scoped>
-button {
-	background: none;
-	padding-top: 0.3rem;
-    padding-right:2rem;
-    margin:-1rem 0;
-}
-</style>
