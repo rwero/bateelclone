@@ -19,8 +19,8 @@ return new class extends Migration
 			$table->string('description');
 			$table->integer('price')->default(0);
 			$table->smallInteger('type');
-			$table->integer('stars');
-			$table->integer('reviews');
+			$table->integer('stars')->default(0);
+			$table->integer('reviews')->default(0);
             $table->timestamps();
         });
     }
