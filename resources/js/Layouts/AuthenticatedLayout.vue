@@ -14,10 +14,15 @@ import Inst from '@/Components/SVGs/Inst.vue';
 import Linkedin from '@/Components/SVGs/Linkedin.vue';
 import Twitter from '@/Components/SVGs/Twitter.vue';
 import Youtube from '@/Components/SVGs/Youtube.vue';
+import axios from "axios";
 
 const showingNavigationDropdown = ref(false);
 const showCart = ref(false);
 const searchTerm = ref("");
+
+const search =  ()=>{
+    window.location = route("search.index",{ _query:{ q:searchTerm.value },})
+    }
 
 </script>
 
@@ -61,7 +66,7 @@ const searchTerm = ref("");
 
 								<TextInput type="text"
 									class=" block w-full focus:border-0 hover:border-gray-400 text-sm" autofocus
-									placeholder="Search for products..." v-model='searchTerm' />
+									placeholder="Search for products..." v-model='searchTerm' @keyup.enter="search" />
 								<MagnifyingGlassIcon class="h-5 w-5 absolute top-2 bottom-0 right-2 " />
 							</div>
 							<div class="ml-3 relative">

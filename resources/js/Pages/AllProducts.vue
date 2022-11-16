@@ -13,7 +13,8 @@ import { addToCart } from '../functions';
 
 let products = ref();
 let last_id = ref(0);
-let get_data = false
+let get_data = ref(false)
+let is_empty = ref(false)
 
 const formatCurrency = (price)=>{
 	
@@ -21,14 +22,18 @@ const formatCurrency = (price)=>{
 	return price.toLocaleString('en-US',  {style:"currency", currency:'USD'});
 }
 async function loadMore() {
-	if (!get_data) { return; }
-	get_data = false;
+	if (!get_data.value || is_empty.value) { return; }
+	get_data.value = false;
 
 	const res = await fetch(`/api/products?id=${last_id.value}`);
 	const data = await res.json();
+    console.log("data: ",data);
+    if(data.length == 0){
+            is_empty.value = true;
+        }
 	products.value = [...products.value, ...data];
 last_id.value = products.value[products.value.length - 1].id;
-	get_data = true;
+	get_data.value = true;
 }
 
 async function scrollEvent() {
@@ -48,7 +53,7 @@ onMounted(async () => {
 	products.value = data;
 	console.log("products: ", products.value);
 	last_id.value = products.value[products.value.length - 1].id;
-	get_data = true;
+	get_data.value = true;
 	window.addEventListener('scroll', scrollEvent);
 });
 onUnmounted(() => {
@@ -100,14 +105,15 @@ const breadcrumbs = ref([
 							class="font-medium text-4xl text-gray-800 leading-tight p-6 lg:p-8 text-center lg:text-left">
 							All Products
 						</h2>
-						{{}}
 						<div class="">
 							<div id="scroll" class="mx-auto max-w-2xl py-8 pt-0  px-6 lg:max-w-7xl lg:px-8">
 								<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-4"
 									v-if="last_id">
+
 									<div v-for="product in products" :key="product.id" class="relative">
 										<div
 											class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 hover:opacity-75 cursor-pointer">
+                                          
 
 											<a :href="route('products.show',product.id)" class="block">
 												<img :src="product.images[0].path" :alt="product.imageAlt"
@@ -146,7 +152,7 @@ const breadcrumbs = ref([
 					</div>
 				</div>
 			</div>
-			<div class="px-4 py-12" :class="get_data? 'hidden':''">
+			<div class="px-4 py-12" :class="get_data && is_empty? 'hidden':''">
 
 				<div class="flex justify-center items-center">
 					<div class="spinner-border animate-spin inline-block w-10 h-10 border-gray-700 rounded-full"

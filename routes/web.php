@@ -4,19 +4,10 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
-use App\Models\Admin;
-use App\Models\Image;
-use App\Models\Order;
-use App\Models\OrderState;
-use App\Models\Product;
-use App\Models\User;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,26 +19,29 @@ use Illuminate\Http\Request;
 |
 */
 
+
 Route::get('/', function () {
-	$some_products = \App\Models\Product::with('images')->where('id', '<', '10')->get();
-	return Inertia::render('Home', [
-		'canLogin' => Route::has('login'),
-		'canRegister' => Route::has('register'),
-		'products' => $some_products
-	]);
+    $some_products = \App\Models\Product::with(['images' => function ($query) {
+        $query->where("is_primary", 1);
+    }])->where('id', '<', '10')->get();
+    return Inertia::render('Home', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'products' => $some_products
+    ]);
 })->name("home.index");
 
 Route::get('/products', function () {
 
-	return Inertia::render('AllProducts');
+    return Inertia::render('AllProducts');
 })->name('products.index');
 
 Route::get('/products/{id}', function ($id) {
 
-	$product = \App\Models\Product::with('images')->with('allReviews.user')->findOrFail($id);
-	return Inertia::render('Product', [
-		'product' => $product
-	]);
+    $product = \App\Models\Product::with("images")->with('allReviews.user')->findOrFail($id);
+    return Inertia::render('Product', [
+        'product' => $product
+    ]);
 })->name('products.show');
 
 Route::get("/u/account", [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('account.show');
@@ -61,7 +55,7 @@ Route::post("/u/edit-address-book", [UserController::class, 'editAddresBook'])->
 
 
 Route::get("/checkout", function () {
-	return Inertia::render('Checkout');
+    return Inertia::render('Checkout');
 })->middleware(['auth', 'verified'])->name('checkout.show');
 
 
@@ -72,12 +66,17 @@ Route::post("/purchase", [UserController::class, 'purchase'])->middleware(['auth
 
 Route::post('/api/review', [ReviewController::class, 'store'])->middleware(['auth', 'verified']);
 
-Route::get('/admin', [DashboardController::class,'admin'])->middleware(['auth', 'verified']);
-Route::get("dashboard", [DashboardController::class,'dashboard'])->middleware(['auth', 'verified', 'admin']);
+Route::get('/admin', [DashboardController::class, 'admin'])->middleware(['auth', 'verified']);
+Route::get("dashboard", [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified', 'admin']);
 Route::post("/dashboard/orderstate", [DashboardController::class, 'updateOrderState'])->middleware(['auth', 'verified', 'admin']);
-Route::post("/dashboard/products", [DashboardController::class,'addProduct'])->middleware(['auth', 'verified', 'admin']);
-Route::post("/dashboard/products/update",[DashboardController::class,'updateProduct'])->middleware(['auth', 'verified', 'admin']);
+Route::post("/dashboard/products", [DashboardController::class, 'addProduct'])->middleware(['auth', 'verified', 'admin']);
+Route::post("/dashboard/products/update", [DashboardController::class, 'updateProduct'])->middleware(['auth', 'verified', 'admin']);
 
+Route::get("/search", function () {
+    // $products = \App\Models\Product::where('title',"like","%".request()->searchTerm."%")->get();
+
+    return Inertia::render('Search',["query"=>request()->query("q")]);
+})->name("search.index");
 /* Route::get("/testmail", function (){
 Mail::to('fake@email.com')->send(new SendEmailConfirmationLink);
 $some_products = \App\Models\Product::with('images')->where('id' ,'<' ,'10')->get();
