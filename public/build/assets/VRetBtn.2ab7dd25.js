@@ -1,0 +1,1 @@
+import o from"./IconArrow.2d4933ca.js";import{o as r,e as a,a as n,f as s}from"./app.89b6fe59.js";import"./_plugin-vue_export-helper.cdc0426e.js";const f={__name:"VRetBtn",emits:["back"],setup(m,{emit:c}){return(t,e)=>(r(),a("div",null,[n("button",{onClick:e[0]||(e[0]=i=>t.$emit("back")),class:"bg-transparent"},[s(o)])]))}};export{f as default};
