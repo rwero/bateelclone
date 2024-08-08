@@ -34,7 +34,7 @@ const images = ref([
 			<div class=" mx-auto  mt-6 mb-20 w-[100vw]   overflow-hidden">
 				<div class=" md:h-[590px] sm:h-[360px] h-[250px] relative">
 
-					<img src="https://bateel.com/media/wysiwyg/HomePageBanners/2022/palm/international/wide.jpg"
+					<img src="/storage/Images/clothes.avif"
 						class="object-cover  h-full object-center w-full" alt="" srcset="">
 					<div
 						class="absolute  inset-0 md:w-4/5  w-[90%] mx-auto text-center  text-white flex items-center justify-center flex-col gap-6 ">
