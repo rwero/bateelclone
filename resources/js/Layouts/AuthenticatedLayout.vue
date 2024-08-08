@@ -7,28 +7,27 @@ import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Link } from "@inertiajs/inertia-vue3";
-import { ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import { ShoppingCartIcon, MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 import SideCart from "@/Components/SideCart.vue";
-import FB from '@/Components/SVGs/FB.vue';
-import Inst from '@/Components/SVGs/Inst.vue';
-import Linkedin from '@/Components/SVGs/Linkedin.vue';
-import Twitter from '@/Components/SVGs/Twitter.vue';
-import Youtube from '@/Components/SVGs/Youtube.vue';
+import FB from "@/Components/SVGs/FB.vue";
+import Inst from "@/Components/SVGs/Inst.vue";
+import Linkedin from "@/Components/SVGs/Linkedin.vue";
+import Twitter from "@/Components/SVGs/Twitter.vue";
+import Youtube from "@/Components/SVGs/Youtube.vue";
 import axios from "axios";
 
 const showingNavigationDropdown = ref(false);
 const showCart = ref(false);
 const searchTerm = ref("");
 
-const search =  ()=>{
-    window.location = route("search.index",{ _query:{ q:searchTerm.value },})
-    }
-
+const search = () => {
+	window.location = route("search.index", { _query: { q: searchTerm.value } });
+};
 </script>
 
 <template>
 	<div>
-		<SideCart :open="showCart" @close="showCart =false" />
+		<SideCart :open="showCart" @close="showCart = false" />
 		<div class="min-h-screen bg-gray-100">
 			<nav class="bg-white border-b border-gray-100">
 				<!-- Primary Navigation Menu -->
@@ -36,7 +35,7 @@ const search =  ()=>{
 					<div class="flex justify-between h-16">
 						<div class="flex">
 							<!-- Logo -->
-							<div class="shrink-0 flex items-center">
+							<div class="shrink-0 flex items-center w-40">
 								<Link :href="route('home.index')">
 								<ApplicationLogo class="block h-9 w-auto" />
 								</Link>
@@ -48,8 +47,9 @@ const search =  ()=>{
 									Home
 								</NavLink>
 
-								<NavLink :href="route('products.index')"
-									:active="route().current('products.index') || route().current('products.show')">
+								<NavLink :href="route('products.index')" :active="route().current('products.index') ||
+									route().current('products.show')
+									">
 									Products
 								</NavLink>
 
@@ -63,11 +63,10 @@ const search =  ()=>{
 							<!-- Settings Dropdown -->
 
 							<div class="relative text-gray-700">
-
-								<TextInput type="text"
-									class=" block w-full focus:border-0 hover:border-gray-400 text-sm" autofocus
-									placeholder="Search for products..." v-model='searchTerm' @keyup.enter="search" />
-								<MagnifyingGlassIcon class="h-5 w-5 absolute top-2 bottom-0 right-2 " />
+								<TextInput type="text" class="block w-full focus:border-0 hover:border-gray-400 text-sm"
+									autofocus placeholder="Search for products..." v-model="searchTerm"
+									@keyup.enter="search" />
+								<MagnifyingGlassIcon class="h-5 w-5 absolute top-2 bottom-0 right-2" />
 							</div>
 							<div class="ml-3 relative">
 								<Dropdown align="right" width="48">
@@ -75,9 +74,10 @@ const search =  ()=>{
 										<span class="inline-flex rounded-md">
 											<button type="button"
 												class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-												{{ $page.props.auth.user ?
-												$page.props.auth.user
-												.first_name: 'Account'
+												{{
+													$page.props.auth.user
+														? $page.props.auth.user.first_name
+														: "Account"
 												}}
 
 												<svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,6 @@ const search =  ()=>{
 									</template>
 
 									<template #content>
-
 										<DropdownLink v-if="!$page.props.auth.user" :href="route('login')" as="button">
 											Login
 										</DropdownLink>
@@ -112,31 +111,23 @@ const search =  ()=>{
 							</div>
 							<div class="text-gray-500 bg-white hover:text-gray-700 cursor-pointer"
 								@click="showCart = true">
-
 								<ShoppingCartIcon class="h-5 w-5" aria-hidden="true" />
 							</div>
 						</div>
 
 						<!-- Hamburger -->
 						<div class="-mr-2 flex items-center md:hidden">
-							<button @click="
-							    showingNavigationDropdown =
-							        !showingNavigationDropdown
-							"
+							<button @click="showingNavigationDropdown = !showingNavigationDropdown"
 								class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
 								<svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
 									<path :class="{
-                                            hidden: showingNavigationDropdown,
-                                            'inline-flex':
-                                                !showingNavigationDropdown,
-                                        }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-										d="M4 6h16M4 12h16M4 18h16" />
+										hidden: showingNavigationDropdown,
+										'inline-flex': !showingNavigationDropdown,
+									}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
 									<path :class="{
-                                            hidden: !showingNavigationDropdown,
-                                            'inline-flex':
-                                                showingNavigationDropdown,
-                                        }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-										d="M6 18L18 6M6 6l12 12" />
+										hidden: !showingNavigationDropdown,
+										'inline-flex': showingNavigationDropdown,
+									}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
 								</svg>
 							</button>
 						</div>
@@ -145,9 +136,9 @@ const search =  ()=>{
 
 				<!-- Responsive Navigation Menu -->
 				<div :class="{
-                        block: showingNavigationDropdown,
-                        hidden: !showingNavigationDropdown,
-                    }" class="md:hidden">
+					block: showingNavigationDropdown,
+					hidden: !showingNavigationDropdown,
+				}" class="md:hidden">
 					<div class="pt-2 pb-3 space-y-1">
 						<ResponsiveNavLink :href="route('home.index')" :active="route().current('home.index')">
 							Shop
@@ -166,20 +157,16 @@ const search =  ()=>{
 							<div class="px-4 font-medium text-sm text-gray-500">
 								{{ $page.props.auth.user.email }}
 							</div>
-							<ResponsiveNavLink :href="route('account.show')"
-								:active="route().current('contact.index')">
+							<ResponsiveNavLink :href="route('account.show')" :active="route().current('contact.index')">
 								{{ $page.props.auth.user.first_name }}
 							</ResponsiveNavLink>
 						</div>
 
-							<button   @click="showCart = true"
-							class="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
-								>
-								My cart
+						<button @click="showCart = true"
+							class="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+							My cart
 						</button>
-						<div class=" space-y-1">
-
-
+						<div class="space-y-1">
 							<ResponsiveNavLink v-if="!$page.props.auth.user" :href="route('login')" as="button"
 								class="w-full text-left">
 								Login
@@ -205,15 +192,15 @@ const search =  ()=>{
 			</header>
 
 			<!-- Page Content -->
-			<main class=" sm:py-4 font-serif">
+			<main class="sm:py-4 font-serif">
 				<slot name="main" />
 			</main>
 
-			<footer class=" bg-gray-700 text-white  py-6">
+			<footer class="bg-gray-700 text-white py-6">
 				<div
-					class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] justify-center  max-w-7xl mx-auto py-6 px-6  lg:px-8 gap-6">
+					class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] justify-center max-w-7xl mx-auto py-6 px-6 lg:px-8 gap-6">
 					<div class="">
-						<h1 class=" text-xl ">Bateel International</h1>
+						<h1 class="text-xl">Bateel International</h1>
 						<ul>
 							<li><a class="text-sm" href="">About us</a></li>
 							<li><a class="text-sm" href="">Bateel forms</a></li>
@@ -224,7 +211,7 @@ const search =  ()=>{
 						</ul>
 					</div>
 					<div>
-						<h1 class=" text-xl ">The Boutique</h1>
+						<h1 class="text-xl">The Boutique</h1>
 						<ul>
 							<li><a class="text-sm" href="">Find a Boutique</a></li>
 							<li><a class="text-sm" href="">Corporate Orders</a></li>
@@ -232,7 +219,7 @@ const search =  ()=>{
 						</ul>
 					</div>
 					<div>
-						<h1 class=" text-xl ">Shopping Online</h1>
+						<h1 class="text-xl">Shopping Online</h1>
 						<ul>
 							<li><a class="text-sm" href="">FAQs</a></li>
 							<li><a class="text-sm" href="">Shipping & Delivery</a></li>
@@ -241,7 +228,7 @@ const search =  ()=>{
 						</ul>
 					</div>
 					<div>
-						<h1 class=" text-xl ">Explore</h1>
+						<h1 class="text-xl">Explore</h1>
 						<ul>
 							<li><a class="text-sm" href="">Ambassador</a></li>
 							<li><a class="text-sm" href="">Seven Dates</a></li>
@@ -253,7 +240,7 @@ const search =  ()=>{
 						</ul>
 					</div>
 					<div>
-						<h1 class=" text-xl ">Our Brands</h1>
+						<h1 class="text-xl">Our Brands</h1>
 						<ul>
 							<li><a class="text-sm" href="">Bateel Boutique</a></li>
 							<li><a class="text-sm" href="">Café Bateel</a></li>
@@ -283,6 +270,6 @@ const search =  ()=>{
 </template>
 <style>
 footer h1 {
-	@apply font-serif mb-4
+	@apply font-serif mb-4;
 }
 </style>
