@@ -30,12 +30,12 @@ const images = ref([
 					<img src="/storage/Images/clothes.avif" class="object-cover h-full object-center w-full" alt=""
 						srcset="" />
 					<div
-						class="absolute inset-0 md:w-4/5 w-[90%] mx-auto text-center text-white flex items-center justify-center flex-col gap-6">
-						<h2 class="font-bold md:text-4xl text-2xl text-shadow">
+						class="absolute inset-0 bg-gray-800/40 mx-auto text-center text-white flex items-center justify-center flex-col gap-6">
+						<h2 class="font-bold md:text-7xl text-2xl text-shadow">
 							Discover the Difference
 						</h2>
-						<span class="md:text-xl text-md text-shadow">Cultivators of the world’s only gourmet dates
-							packaged in luxury
+						<span class="md:text-2xl text-md text-shadow lg:max-w-[50%] max-w-[90%]">Cultivators of the
+							world’s only gourmet dates packaged in luxury
 							hand-painted wooden gift boxes</span>
 						<a :href="route('products.index')"
 							class="py-3 px-10 mt-2 uppercase bg-white rounded-lg text-black">
@@ -116,10 +116,6 @@ const images = ref([
 </template>
 
 <style>
-.text-shadow {
-	text-shadow: 2px 2px 2px hsl(0, 0%, 17%);
-}
-
 .img-shadow {
 	box-shadow: 15px 15px 0px #f0e2e1;
 }
