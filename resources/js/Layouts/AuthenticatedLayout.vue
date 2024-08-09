@@ -192,7 +192,7 @@ const search = () => {
 			</header>
 
 			<!-- Page Content -->
-			<main class="sm:py-4 font-serif">
+			<main class="sm:py-4 font-serif overflow-hidden">
 				<slot name="main" />
 			</main>
 
