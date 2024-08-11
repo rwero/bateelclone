@@ -7,7 +7,7 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { PhoneIcon, CheckCircleIcon } from "@heroicons/vue/24/solid";
 import { loadStripe } from "@stripe/stripe-js";
 import { usePage } from "@inertiajs/inertia-vue3";
-import {getCartProducts} from '../functions';
+import { getCartProducts } from "../functions";
 import axios from "axios";
 
 const header = ref(true);
@@ -16,7 +16,18 @@ const stripe = ref({});
 const cardElement = ref({});
 const processing = ref(false);
 
-const user = computed(() => usePage().props.value.auth.user);
+const user = computed(
+	() =>
+		usePage().props.value.auth.user || ({
+			first_name: "",
+			last_name: "",
+			email: "",
+			address: "",
+			city: "",
+			state: "",
+			postal_code: "",
+		})
+);
 console.log("dd user : ", user.value);
 
 onMounted(async () => {
@@ -24,14 +35,12 @@ onMounted(async () => {
 
 	stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_KEY);
 	const elements = stripe.value.elements();
-	cardElement.value = elements.create('card', {
+	cardElement.value = elements.create("card", {
 		classes: {
-			base: 'bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-base outline-none text-gray-700 p-3 leading-8 transition-colors duration-200 ease-in-out'
-
-		}
-
+			base: "bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-base outline-none text-gray-700 p-3 leading-8 transition-colors duration-200 ease-in-out",
+		},
 	});
-	cardElement.value.mount('#card-element');
+	cardElement.value.mount("#card-element");
 });
 let subtotal = computed(() => {
 	let res = 0;
@@ -39,48 +48,45 @@ let subtotal = computed(() => {
 		res += prod.price * prod.quantity;
 	}
 
-	return res
+	return res;
 });
 const processPayment = async () => {
 	processing.value = true;
 	const { paymentMethod, error } = await stripe.value.createPaymentMethod(
-		'card', cardElement.value, {
-		billing_details: {
-			name: user.value.first_name + ' ' + user.value.last_name,
-			email: user.value.email,
-			address: {
-				line1: user.value.address,
-				city: user.value.city,
-				state: user.value.state,
-				postal_code: user.value.zip_code
-			}
+		"card",
+		cardElement.value,
+		{
+			billing_details: {
+				name: user.value.first_name + " " + user.value.last_name,
+				email: user.value.email,
+				address: {
+					line1: user.value.address,
+					city: user.value.city,
+					state: user.value.state,
+					postal_code: user.value.zip_code,
+				},
+			},
 		}
-	}
 	);
 	if (error) {
 		processing.value = false;
 		console.error(error);
 		alert(error.message);
 	} else {
-		console.log("metode : ",paymentMethod);
 		user.value.payment_method_id = paymentMethod.id;
 		user.value.subtotal = subtotal.value;
 		user.value.delivery_fee = 500;
 		user.value.cart = JSON.stringify(products.value);
-		console.log('user : ',user.value);
 		const res = await axios.post("/purchase", user.value);
-		console.log("THE RESULT : ",res);
 		processing.value = false;
-		if(res.status == 200){
+		if (res.status == 200) {
 			console.log("200");
 			products.value = [];
 			localStorage.setItem("cart", "[]");
-			window.location = route('orders.index');
-
+			window.location = route("orders.index");
 		}
 	}
-
-}
+};
 </script>
 
 <template>
@@ -88,7 +94,7 @@ const processPayment = async () => {
 		<div class="min-h-screen bg-gray-100">
 			<nav class="bg-white border-b border-gray-100">
 				<!-- Primary Navigation Menu -->
-				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
 					<div class="flex justify-between h-16">
 						<div class="flex">
 							<!-- Logo -->
@@ -109,26 +115,25 @@ const processPayment = async () => {
 			</nav>
 
 			<!-- Page Heading -->
-			<header class="max-w-7xl mx-auto my-8 px-8" v-if="header">
+			<header class="max-w-7xl mx-auto my-8 px-3 sm:px-8" v-if="header">
 				<div
-					class="flex items-center justify-center gap-8 rounded-lg bg-indigo-600 px-8 py-4 font-medium text-white">
+					class="flex items-center justify-center gap-8 rounded-lg bg-indigo-600 sm:px-8 px-4 py-4 font-medium text-white">
 					<span class="text-center">
-						Orders are usually shipped within 24 hours of order
-						acceptance (Monday to Friday) and expected to arrive
-						within 10 working days.
+						Orders are usually shipped within 24 hours of order acceptance (Monday to
+						Friday) and expected to arrive within 10 working days.
 					</span>
 					<XMarkIcon class="h-5 w-5 min-w-[1.25rem] cursor-pointer" @click="header = false" />
 				</div>
 			</header>
 
 			<!-- Page Content -->
-			<main class="max-w-7xl mx-auto mt-8 px-8">
+			<main class="max-w-7xl mx-auto mt-8 px-4 sm:px-8">
 				<div class="grid md:grid-cols-7 grid-cols-1 gap-8">
 					<div class="md:col-span-4 col-span-1 mb-8">
 						<div class>
 							<form action="#" method="POST">
 								<div class="overflow-hidden shadow-lg rounded-lg">
-									<div class="bg-white p-6">
+									<div class="bg-white p-4 sm:p-6">
 										<h2 class="text-xl font-bold mb-4">Shipping Information</h2>
 										<div class="grid grid-cols-6 gap-6">
 											<div class="col-span-6 sm:col-span-3">
@@ -137,10 +142,7 @@ const processPayment = async () => {
 												<input :disabled="processing" type="text" name="first-name"
 													id="first-name" autocomplete="given-name"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-													:value="
-														$page.props.auth.user
-															.first_name
-													" />
+													:value="user.first_name" />
 											</div>
 
 											<div class="col-span-6 sm:col-span-3">
@@ -149,10 +151,7 @@ const processPayment = async () => {
 												<input :disabled="processing" type="text" name="last-name"
 													id="last-name" autocomplete="family-name"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-													:value="
-														$page.props.auth.user
-															.last_name
-													" />
+													:value="user.last_name" />
 											</div>
 
 											<div class="col-span-6 sm:col-span-3">
@@ -162,10 +161,7 @@ const processPayment = async () => {
 												<input :disabled="processing" type="text" name="email-address"
 													id="email-address" autocomplete="email"
 													class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-													:value="
-														$page.props.auth.user
-															.email
-													" />
+													:value="user.email" />
 											</div>
 											<div class="col-span-6 sm:col-span-3">
 												<label for="company-website"
@@ -241,12 +237,12 @@ const processPayment = async () => {
 													placeholder="you@example.com" />
 											</div>
 											<p class="mt-2 text-sm text-gray-500">
-												Notes about your order, e.g.
-												special notes for delivery.
+												Notes about your order, e.g. special notes for
+												delivery.
 											</p>
 										</div>
-										<div class="bg-white border-b border-t border-gray-300  pt-6 mt-6 pb-8">
-											<h2 class="text-xl font-bold ">Shipping Information</h2>
+										<div class="bg-white border-b border-t border-gray-300 pt-6 mt-6 pb-8">
+											<h2 class="text-xl font-bold">Shipping Information</h2>
 											<div
 												class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center justify-between mt-6">
 												<div class="rounded-lg border-2 border-indigo-500 p-4">
@@ -257,7 +253,7 @@ const processPayment = async () => {
 													<p class="text-gray-500">4-10 business days</p>
 													<p class="mt-6 font-bold">$5.00</p>
 												</div>
-												<div class="rounded-lg border  border-gray-300 p-4 hidden">
+												<div class="rounded-lg border border-gray-300 p-4 hidden">
 													<div class="flex items-center justify-between">
 														<span class="font-bold">Express</span>
 														<CheckCircleIcon class="h-6 w-6 hidden" />
@@ -267,33 +263,30 @@ const processPayment = async () => {
 												</div>
 											</div>
 										</div>
-										<div class="pt-6 pb-4 ">
-											<h2 class="text-xl font-bold ">Payment</h2>
+										<div class="pt-6 pb-4">
+											<h2 class="text-xl font-bold">Payment</h2>
 											<div class="flex gap-8 items-center pt-6">
 												<div class="flex items-center justify-start gap-3">
 													<input :disabled="processing" type="radio" name="payment" id="cc"
 														class="focus:ring-0 border border-gray-300" checked />
 													<label for="cc" class="text-gray-700">Credit Card</label>
 												</div>
-
 											</div>
 
 											<div class="pt-6 pb-4">
-
 												<div id="card-element"></div>
 											</div>
-
 										</div>
-
 									</div>
-
 								</div>
 							</form>
 						</div>
 					</div>
 					<div class="md:col-span-3 col-span-1 mb-8">
 						<div class="rounded-lg bg-white border border-gray-100 p-4 shadow-lg">
-							<h2 class="text-xl font-bold pb-2 border-b border-gray-100 mb-4">Summary</h2>
+							<h2 class="text-xl font-bold pb-2 border-b border-gray-100 mb-4">
+								Summary
+							</h2>
 							<div class="flow-root">
 								<ul role="list" class="-my-6 divide-y divide-gray-200">
 									<li v-for="product in products" :key="product.product_id" class="flex py-6">
@@ -307,21 +300,27 @@ const processPayment = async () => {
 											<div>
 												<div class="flex justify-between text-base font-medium text-gray-900">
 													<h3>
-														<a :href='route("products.show" , product.product_id)'>
-															{{
-															product.title
-															}}
+														<a :href="route(
+															'products.show',
+															product.product_id
+														)
+															">
+															{{ product.title }}
 														</a>
 													</h3>
 													<p class="ml-4">{{ product.price }}</p>
 												</div>
 											</div>
 											<div class="flex flex-1 items-end justify-between text-sm">
-												<p class="text-gray-500">Qty {{ product.quantity }}</p>
+												<p class="text-gray-500">
+													Qty {{ product.quantity }}
+												</p>
 
 												<div class="flex">
 													<button type="button"
-														class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+														class="font-medium text-indigo-600 hover:text-indigo-500">
+														Remove
+													</button>
 												</div>
 											</div>
 										</div>
@@ -331,7 +330,7 @@ const processPayment = async () => {
 							<div class="border-t border-gray-200 mt-6 pt-4">
 								<div class="flex justify-between text-base font-medium text-gray-900 mb-2">
 									<p>Subtotal</p>
-									<p>${{subtotal}}</p>
+									<p>${{ subtotal }}</p>
 								</div>
 
 								<div class="flex justify-between text-base font-medium text-gray-900 my-2">
@@ -341,13 +340,14 @@ const processPayment = async () => {
 
 								<div class="flex justify-between text-base font-medium text-gray-900 my-2">
 									<p>Total</p>
-									<p>${{subtotal + 5.00}}</p>
+									<p>${{ subtotal + 5.0 }}</p>
 								</div>
 
 								<div class="mt-6">
 									<button @click="processPayment"
 										class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-										v-text="processing ? 'Processing...': 'Confirm Order'"></button>
+										v-text="processing ? 'Processing...' : 'Confirm Order'
+											"></button>
 								</div>
 							</div>
 						</div>

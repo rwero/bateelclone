@@ -56,7 +56,7 @@ Route::post("/u/edit-address-book", [UserController::class, 'editAddresBook'])->
 
 Route::get("/checkout", function () {
     return Inertia::render('Checkout');
-})->middleware(['auth', 'verified'])->name('checkout.show');
+})->name('checkout.show');
 
 
 Route::get('/cart', [CartController::class, 'index'])->middleware(['auth', 'verified']);
