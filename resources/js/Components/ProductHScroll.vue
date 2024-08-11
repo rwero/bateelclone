@@ -7,8 +7,8 @@
 				<div class="min-w-[270px] snap-center" v-for="prod in $page.props.products" :key="prod.id">
 					<div>
 						<a :href="route('products.show', prod.id)" class="block">
-							<img :src="prod.images[0].path" class="object-cover w-full object-center h-80" alt=""
-								srcset="" />
+							<img :src="prod.images.length > 0 ? prod.images[0].path : ''"
+								class="object-cover w-full object-center h-80" alt="" srcset="" />
 						</a>
 					</div>
 					<div class="mt-2">

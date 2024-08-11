@@ -116,7 +116,7 @@ const breadcrumbs = ref([
                                           
 
 											<a :href="route('products.show',product.id)" class="block">
-												<img :src="product.images[0].path" :alt="product.imageAlt"
+												<img :src="product.images.length >0 ? product.images[0].path : ''" :alt="product.imageAlt"
 													class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
 											</a>
 										</div>
